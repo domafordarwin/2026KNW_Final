@@ -14,6 +14,7 @@
 
 .report-section {
   margin: 24px 0;
+  page-break-inside: avoid;
 }
 
 .report-table {
@@ -46,6 +47,10 @@
 }
 
 @media print {
+  .report-page-break {
+    page-break-before: always;
+  }
+
   .report-layout {
     background: #ffffff;
   }

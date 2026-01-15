@@ -4,7 +4,8 @@
     "executive_summary",
     "subskill_synthesis",
     "item_analysis",
-    "integrated"
+    "integrated",
+    "trait_explanation"
   ],
   "types": {
     "executive_summary": "string",
@@ -13,6 +14,9 @@
     "integrated": "object",
     "integrated.domain_guidance": "object",
     "integrated.parent_summary": "string",
-    "trait_explanation": "string"
+    "trait_explanation": "string",
+    "integrated.book_guidance": "object",
+    "integrated.executive_summary_teacher": "string",
+    "integrated.parent_summary_teacher": "string"
   }
 }

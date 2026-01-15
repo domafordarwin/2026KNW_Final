@@ -41,6 +41,7 @@ class TeacherFeedbacksController < ApplicationController
     end
 
     @teacher_feedback.save!
+    create_audit!(approve ? "approve" : "save_draft")
     redirect_to submission_teacher_feedback_path(@submission), notice: "Saved"
   end
 
@@ -58,5 +59,18 @@ class TeacherFeedbacksController < ApplicationController
     rescue JSON::ParserError => e
       [nil, "Invalid JSON: #{e.message}"]
     end
+  end
+
+  def create_audit!(action)
+    FeedbackAudit.create!(
+      teacher_feedback: @teacher_feedback,
+      actor: current_user,
+      action: action,
+      timestamp: Time.current,
+      meta_json: {
+        status: @teacher_feedback.status,
+        approved_at: @teacher_feedback.approved_at
+      }
+    )
   end
 end
