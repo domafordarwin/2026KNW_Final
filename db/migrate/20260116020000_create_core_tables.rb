@@ -105,7 +105,6 @@ class CreateCoreTables < ActiveRecord::Migration[8.1]
       t.references :item, null: false, foreign_key: true
       t.json :answer_json
       t.integer :time_spent
-      t.datetime :updated_at
       t.timestamps
     end
     add_index :responses, :submission_id
