@@ -1,4 +1,5 @@
 class ReportsController < ApplicationController
+  layout "report"
   before_action :set_report
   before_action :authorize_report_access!
   before_action :set_audience

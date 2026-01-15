@@ -1,3 +1,17 @@
+.report-layout {
+  font-family: "Georgia", "Times New Roman", serif;
+  color: #222;
+  background: #f6f4ee;
+}
+
+.report-container {
+  max-width: 980px;
+  margin: 32px auto;
+  padding: 24px 32px;
+  background: #ffffff;
+  box-shadow: 0 6px 18px rgba(0, 0, 0, 0.08);
+}
+
 .report-section {
   margin: 24px 0;
 }
@@ -29,4 +43,16 @@
   height: 100%;
   background: #2f6fed;
   border-radius: 6px;
+}
+
+@media print {
+  .report-layout {
+    background: #ffffff;
+  }
+
+  .report-container {
+    box-shadow: none;
+    margin: 0;
+    padding: 0;
+  }
 }

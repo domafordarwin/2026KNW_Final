@@ -10,6 +10,9 @@ Rails.application.routes.draw do
   # get "service-worker" => "rails/pwa#service_worker", as: :pwa_service_worker
 
   resources :reports, only: [:show]
+  resources :submissions, only: [] do
+    resource :teacher_feedback, only: [:show, :update]
+  end
 
   namespace :api do
     namespace :v1 do

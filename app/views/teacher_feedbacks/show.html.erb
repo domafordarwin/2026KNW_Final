@@ -1,0 +1,21 @@
+<h1>Teacher Feedback</h1>
+
+<p>
+  Submission: <%= @submission.id %><br>
+  Student: <%= @submission.student&.name %><br>
+  Status: <%= @teacher_feedback.status.presence || "draft" %>
+</p>
+
+<h2>AI Compiled JSON (read-only)</h2>
+<pre><%= JSON.pretty_generate(@compiled_json) %></pre>
+
+<h2>Teacher Feedback JSON</h2>
+<%= form_with url: submission_teacher_feedback_path(@submission), method: :patch do |form| %>
+  <div>
+    <%= form.text_area :content_json, value: JSON.pretty_generate(@teacher_feedback.content_json || {}), rows: 18, cols: 90 %>
+  </div>
+  <div>
+    <%= form.submit "Save Draft" %>
+    <%= form.submit "Approve" %>
+  </div>
+<% end %>

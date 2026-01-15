@@ -1,0 +1,18 @@
+{
+  "version": "v1",
+  "required_keys": [
+    "executive_summary",
+    "subskill_synthesis",
+    "item_analysis",
+    "integrated"
+  ],
+  "types": {
+    "executive_summary": "string",
+    "subskill_synthesis": "object",
+    "item_analysis": "array",
+    "integrated": "object",
+    "integrated.domain_guidance": "object",
+    "integrated.parent_summary": "string",
+    "trait_explanation": "string"
+  }
+}

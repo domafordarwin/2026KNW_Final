@@ -4,22 +4,46 @@ module Ai
       return ["payload must be a Hash"] unless payload.is_a?(Hash)
 
       errors = []
-      Ai::FeedbackSchema.required_keys.each do |key|
+      required_keys = Ai::FeedbackSchema.required_keys
+      types = Ai::FeedbackSchema.types
+
+      required_keys.each do |key|
         errors << "missing #{key}" unless payload.key?(key)
       end
 
-      errors << "executive_summary must be String" unless payload["executive_summary"].is_a?(String)
-      errors << "subskill_synthesis must be Hash" unless payload["subskill_synthesis"].is_a?(Hash)
-      errors << "item_analysis must be Array" unless payload["item_analysis"].is_a?(Array)
-      errors << "integrated must be Hash" unless payload["integrated"].is_a?(Hash)
+      types.each do |path, expected|
+        value = fetch_path(payload, path)
+        next if value.nil?
+        next if type_matches?(value, expected)
 
-      if payload["integrated"].is_a?(Hash) && payload["integrated"].key?("domain_guidance")
-        unless payload["integrated"]["domain_guidance"].is_a?(Hash)
-          errors << "integrated.domain_guidance must be Hash"
-        end
+        errors << "#{path} must be #{expected}"
       end
 
       errors
+    end
+
+    private
+
+    def fetch_path(payload, path)
+      keys = path.split(".")
+      keys.reduce(payload) do |current, key|
+        return nil unless current.is_a?(Hash)
+
+        current[key]
+      end
+    end
+
+    def type_matches?(value, expected)
+      case expected
+      when "string"
+        value.is_a?(String)
+      when "object"
+        value.is_a?(Hash)
+      when "array"
+        value.is_a?(Array)
+      else
+        true
+      end
     end
   end
 end

@@ -1,9 +1,17 @@
 module Ai
   class FeedbackSchema
-    REQUIRED_KEYS = %w[executive_summary subskill_synthesis item_analysis integrated].freeze
+    SCHEMA_PATH = Rails.root.join("config", "ai_schemas", "feedback_v1.json").freeze
 
     def self.required_keys
-      REQUIRED_KEYS
+      schema.fetch("required_keys")
+    end
+
+    def self.types
+      schema.fetch("types")
+    end
+
+    def self.schema
+      @schema ||= JSON.parse(File.read(SCHEMA_PATH))
     end
   end
 end
