@@ -22,14 +22,14 @@ test:
 
 production:
   primary:
-    url: <%= ENV.fetch("DATABASE_URL") %>
+    url: <%= ENV["DATABASE_URL"] %>
     pool: <%= ENV.fetch("RAILS_MAX_THREADS") { 5 } %>
   cache:
-    url: <%= ENV.fetch("DATABASE_URL") %>
+    url: <%= ENV["DATABASE_URL"] %>
     migrations_paths: db/cache_migrate
   queue:
-    url: <%= ENV.fetch("DATABASE_URL") %>
+    url: <%= ENV["DATABASE_URL"] %>
     migrations_paths: db/queue_migrate
   cable:
-    url: <%= ENV.fetch("DATABASE_URL") %>
+    url: <%= ENV["DATABASE_URL"] %>
     migrations_paths: db/cable_migrate
