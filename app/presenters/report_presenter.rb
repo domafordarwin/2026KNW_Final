@@ -140,6 +140,31 @@ class ReportPresenter
     subskill_scores.sort_by { |_, score| -score.to_f }.first(limit)
   end
 
+  def assessment_overview_text
+    "This assessment includes #{assessment_items.count} items covering #{assessment_domains.count} domains " \
+      "and #{assessment_subskills.count} subskills."
+  end
+
+  def domain_profile_text
+    "Scores are shown with percentiles to highlight relative strengths by domain."
+  end
+
+  def subskill_strength_text
+    "Top subskills are highlighted to guide targeted practice."
+  end
+
+  def item_analysis_text
+    "Item-level responses are listed with correctness and response time for review."
+  end
+
+  def trait_text
+    "Trait types are rule-based; explanations may be refined by teachers."
+  end
+
+  def book_guidance_text
+    "Recommendations are generated from the allowlist only."
+  end
+
   def book_guidance
     submission&.book_guidance
   end

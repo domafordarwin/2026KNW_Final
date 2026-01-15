@@ -1,5 +1,6 @@
 <section class="report-section">
   <h2>S-10 Book Guidance</h2>
+  <p><%= @presenter.book_guidance_text %></p>
   <ul>
     <% @presenter.selected_books.each do |book| %>
       <li><%= book.title %> - <%= book.author %></li>

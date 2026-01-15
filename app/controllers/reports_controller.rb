@@ -1,6 +1,7 @@
 class ReportsController < ApplicationController
   before_action :set_report
   before_action :authorize_report_access!
+  before_action :set_audience
 
   def show
     @presenter = ReportPresenter.new(@report)
@@ -29,6 +30,7 @@ class ReportsController < ApplicationController
   def token_access?
     token = params[:token]
     return false if token.blank?
+    return false unless @report.scope == "student"
 
     ReportAccess.where(report: @report, access_token: token)
       .where("expires_at IS NULL OR expires_at >= ?", Time.current)
@@ -45,5 +47,18 @@ class ReportsController < ApplicationController
     return false unless current_user
 
     %w[admin teacher school_manager].include?(current_user.role)
+  end
+
+  def set_audience
+    @audience =
+      if staff_access?
+        "teacher"
+      elsif current_user&.role == "parent" || token_access?
+        "parent"
+      elsif current_user&.role == "student"
+        "student"
+      else
+        "student"
+      end
   end
 end

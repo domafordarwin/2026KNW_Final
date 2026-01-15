@@ -136,10 +136,11 @@ AiFeedbackRun.create!(
   status: "success"
 )
 
-AiFeedbackCompiled.create!(
+  AiFeedbackCompiled.create!(
   submission: submission,
   compiled_json: {
     executive_summary: "Min demonstrates strong literal comprehension and good inference skills.",
+    trait_explanation: "Type B readers tend to be curious and reflect on character motives.",
     subskill_synthesis: {
       main_idea: "Consistently identifies key ideas.",
       reasoning: "Can explain motivations with evidence."

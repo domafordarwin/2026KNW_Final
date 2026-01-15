@@ -5,10 +5,10 @@
 <%= render "reports/student/s03_executive_summary" %>
 <%= render "reports/student/s04_domain_profile" %>
 <%= render "reports/student/s05_subskill_strengths" %>
-<%= render "reports/student/s06_item_analysis" %>
-<%= render "reports/student/s07_rubric_feedback" %>
+<%= render "reports/student/s06_item_analysis" if report_section_visible?(@audience, "S-06") %>
+<%= render "reports/student/s07_rubric_feedback" if report_section_visible?(@audience, "S-07") %>
 <%= render "reports/student/s08_trait" %>
 <%= render "reports/student/s09_domain_guidance" %>
 <%= render "reports/student/s10_book_guidance" %>
-<%= render "reports/student/s11_parent_summary" %>
-<%= render "reports/student/s12_appendix" %>
+<%= render "reports/student/s11_parent_summary" if report_section_visible?(@audience, "S-11") %>
+<%= render "reports/student/s12_appendix" if report_section_visible?(@audience, "S-12") %>
