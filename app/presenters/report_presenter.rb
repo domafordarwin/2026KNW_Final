@@ -37,8 +37,28 @@ class ReportPresenter
     session&.assessment_version
   end
 
+  def assessment_items
+    assessment_version&.items || []
+  end
+
+  def assessment_domains
+    assessment_items.map(&:domain).compact.uniq
+  end
+
+  def assessment_subskills
+    assessment_items.map(&:subskill).compact.uniq
+  end
+
   def metrics_result
     submission&.metrics_result
+  end
+
+  def domain_scores
+    metrics_result&.domain_scores_json || {}
+  end
+
+  def subskill_scores
+    metrics_result&.subskill_scores_json || {}
   end
 
   def trait_result
@@ -64,6 +84,34 @@ class ReportPresenter
     merged_feedback.fetch("item_analysis", [])
   end
 
+  def item_rows
+    return [] unless submission
+
+    scoring_by_item = submission.scoring_results.index_by(&:item_id)
+    submission.responses.includes(:item).map do |response|
+      item = response.item
+      scoring = scoring_by_item[item.id]
+      {
+        item_id: item.id,
+        prompt: item.prompt,
+        score: scoring&.score,
+        is_correct: scoring&.is_correct,
+        answer: response.answer_json,
+        time_spent: response.time_spent
+      }
+    end
+  end
+
+  def rubric_feedback
+    return [] unless submission
+
+    submission.scoring_results.filter_map do |result|
+      next if result.rubric_breakdown_json.blank?
+
+      { item_id: result.item_id, rubric: result.rubric_breakdown_json }
+    end
+  end
+
   def subskill_synthesis
     merged_feedback.fetch("subskill_synthesis", {})
   end
@@ -87,6 +135,18 @@ class ReportPresenter
   def selected_books
     ids = book_guidance&.selected_book_ids_json || []
     BookCatalog.where(id: ids)
+  end
+
+  def participation_stats
+    return {} unless session
+
+    total = session.submissions.count
+    submitted = session.submissions.where(status: "submitted").count
+    {
+      total: total,
+      submitted: submitted,
+      submission_rate: total.zero? ? 0 : ((submitted.to_f / total) * 100).round(1)
+    }
   end
 
   def domain_aggs

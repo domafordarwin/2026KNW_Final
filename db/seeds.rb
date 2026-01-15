@@ -263,3 +263,4 @@ AnalyticsTraitAgg.create!(
 )
 
 puts "Seeded: admin=#{admin.id}, school_manager=#{school_manager.id}, teacher=#{teacher.id}, student=#{student.id}"
+puts "Reports: student_report=#{report.id}, school_report=#{school_report.id}"

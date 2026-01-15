@@ -1,6 +1,6 @@
 <h1>Student Report</h1>
 
-<h2>S-01 Basic Info</h2>
+<h2>S-01 Cover / Basic Info</h2>
 <p>
   Student: <%= @presenter.student&.name %><br>
   School: <%= @presenter.school&.name %><br>
@@ -11,20 +11,48 @@
 <h2>S-02 Assessment Overview</h2>
 <p>
   Version: <%= @presenter.assessment_version&.name %><br>
-  Items: <%= @presenter.assessment_version&.items&.count || 0 %>
+  Items: <%= @presenter.assessment_items.count %><br>
+  Domains: <%= @presenter.assessment_domains.join(", ") %><br>
+  Subskills: <%= @presenter.assessment_subskills.join(", ") %>
 </p>
 
 <h2>S-03 Executive Summary</h2>
-<p><%= @presenter.executive_summary %></p>
+<p><%= @presenter.executive_summary.presence || "TBD" %></p>
 
 <h2>S-04 Domain Profile</h2>
-<pre><%= JSON.pretty_generate(@presenter.metrics_result&.domain_scores_json || {}) %></pre>
+<pre><%= JSON.pretty_generate(@presenter.domain_scores) %></pre>
 
 <h2>S-05 Subskill Strengths</h2>
 <pre><%= JSON.pretty_generate(@presenter.subskill_synthesis || {}) %></pre>
 
-<h2>S-06 Item Analysis</h2>
-<pre><%= JSON.pretty_generate(@presenter.item_analysis || []) %></pre>
+<h2>S-06 Item Analysis Table</h2>
+<table>
+  <thead>
+    <tr>
+      <th>Item</th>
+      <th>Prompt</th>
+      <th>Score</th>
+      <th>Correct</th>
+      <th>Answer</th>
+      <th>Time</th>
+    </tr>
+  </thead>
+  <tbody>
+    <% @presenter.item_rows.each do |row| %>
+      <tr>
+        <td><%= row[:item_id] %></td>
+        <td><%= row[:prompt] %></td>
+        <td><%= row[:score] %></td>
+        <td><%= row[:is_correct] %></td>
+        <td><%= row[:answer].to_json %></td>
+        <td><%= row[:time_spent] %>s</td>
+      </tr>
+    <% end %>
+  </tbody>
+</table>
+
+<h2>S-07 Rubric Feedback</h2>
+<pre><%= JSON.pretty_generate(@presenter.rubric_feedback || []) %></pre>
 
 <h2>S-08 Trait</h2>
 <p>Type: <%= @presenter.trait_result&.trait_type %></p>
@@ -41,4 +69,7 @@
 <pre><%= JSON.pretty_generate(@presenter.book_guidance&.guidance_json || {}) %></pre>
 
 <h2>S-11 Parent Summary</h2>
-<p><%= @presenter.parent_summary %></p>
+<p><%= @presenter.parent_summary.presence || "TBD" %></p>
+
+<h2>S-12 Appendix</h2>
+<p>Reference metadata available for staff view.</p>
