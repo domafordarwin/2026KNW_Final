@@ -1,6 +1,8 @@
 module Api
   module V1
     class ItemsController < BaseController
+      before_action -> { require_role!("admin", "teacher", "school_manager") }
+
       def index
         render json: Item.order(:id).limit(50)
       end

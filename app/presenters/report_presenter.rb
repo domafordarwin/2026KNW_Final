@@ -61,6 +61,10 @@ class ReportPresenter
     metrics_result&.subskill_scores_json || {}
   end
 
+  def domain_percentiles
+    metrics_result&.percentile_json || {}
+  end
+
   def trait_result
     submission&.trait_result
   end
@@ -126,6 +130,14 @@ class ReportPresenter
 
   def parent_summary
     merged_feedback.dig("integrated", "parent_summary") || merged_feedback["parent_summary"]
+  end
+
+  def trait_explanation
+    merged_feedback["trait_explanation"]
+  end
+
+  def top_subskills(limit = 3)
+    subskill_scores.sort_by { |_, score| -score.to_f }.first(limit)
   end
 
   def book_guidance

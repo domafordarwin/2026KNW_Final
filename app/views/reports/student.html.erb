@@ -1,75 +1,14 @@
 <h1>Student Report</h1>
 
-<h2>S-01 Cover / Basic Info</h2>
-<p>
-  Student: <%= @presenter.student&.name %><br>
-  School: <%= @presenter.school&.name %><br>
-  Class: <%= @presenter.school_class&.name %> (Grade <%= @presenter.school_class&.grade %>)<br>
-  Session: <%= @presenter.session&.id %>
-</p>
-
-<h2>S-02 Assessment Overview</h2>
-<p>
-  Version: <%= @presenter.assessment_version&.name %><br>
-  Items: <%= @presenter.assessment_items.count %><br>
-  Domains: <%= @presenter.assessment_domains.join(", ") %><br>
-  Subskills: <%= @presenter.assessment_subskills.join(", ") %>
-</p>
-
-<h2>S-03 Executive Summary</h2>
-<p><%= @presenter.executive_summary.presence || "TBD" %></p>
-
-<h2>S-04 Domain Profile</h2>
-<pre><%= JSON.pretty_generate(@presenter.domain_scores) %></pre>
-
-<h2>S-05 Subskill Strengths</h2>
-<pre><%= JSON.pretty_generate(@presenter.subskill_synthesis || {}) %></pre>
-
-<h2>S-06 Item Analysis Table</h2>
-<table>
-  <thead>
-    <tr>
-      <th>Item</th>
-      <th>Prompt</th>
-      <th>Score</th>
-      <th>Correct</th>
-      <th>Answer</th>
-      <th>Time</th>
-    </tr>
-  </thead>
-  <tbody>
-    <% @presenter.item_rows.each do |row| %>
-      <tr>
-        <td><%= row[:item_id] %></td>
-        <td><%= row[:prompt] %></td>
-        <td><%= row[:score] %></td>
-        <td><%= row[:is_correct] %></td>
-        <td><%= row[:answer].to_json %></td>
-        <td><%= row[:time_spent] %>s</td>
-      </tr>
-    <% end %>
-  </tbody>
-</table>
-
-<h2>S-07 Rubric Feedback</h2>
-<pre><%= JSON.pretty_generate(@presenter.rubric_feedback || []) %></pre>
-
-<h2>S-08 Trait</h2>
-<p>Type: <%= @presenter.trait_result&.trait_type %></p>
-
-<h2>S-09 Domain Guidance</h2>
-<pre><%= JSON.pretty_generate(@presenter.domain_guidance || {}) %></pre>
-
-<h2>S-10 Book Guidance</h2>
-<ul>
-  <% @presenter.selected_books.each do |book| %>
-    <li><%= book.title %> - <%= book.author %></li>
-  <% end %>
-</ul>
-<pre><%= JSON.pretty_generate(@presenter.book_guidance&.guidance_json || {}) %></pre>
-
-<h2>S-11 Parent Summary</h2>
-<p><%= @presenter.parent_summary.presence || "TBD" %></p>
-
-<h2>S-12 Appendix</h2>
-<p>Reference metadata available for staff view.</p>
+<%= render "reports/student/s01_basic_info" %>
+<%= render "reports/student/s02_assessment_overview" %>
+<%= render "reports/student/s03_executive_summary" %>
+<%= render "reports/student/s04_domain_profile" %>
+<%= render "reports/student/s05_subskill_strengths" %>
+<%= render "reports/student/s06_item_analysis" %>
+<%= render "reports/student/s07_rubric_feedback" %>
+<%= render "reports/student/s08_trait" %>
+<%= render "reports/student/s09_domain_guidance" %>
+<%= render "reports/student/s10_book_guidance" %>
+<%= render "reports/student/s11_parent_summary" %>
+<%= render "reports/student/s12_appendix" %>

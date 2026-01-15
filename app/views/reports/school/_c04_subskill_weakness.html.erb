@@ -1,0 +1,21 @@
+<section class="report-section">
+  <h2>C-04 Subskill Weaknesses</h2>
+  <table class="report-table">
+    <thead>
+      <tr>
+        <th>Subskill</th>
+        <th>Average</th>
+        <th>Chart</th>
+      </tr>
+    </thead>
+    <tbody>
+      <% @presenter.subskill_aggs.each do |agg| %>
+        <tr>
+          <td><%= agg.subskill %></td>
+          <td><%= agg.avg %></td>
+          <td><%= report_bar(agg.avg) %></td>
+        </tr>
+      <% end %>
+    </tbody>
+  </table>
+</section>

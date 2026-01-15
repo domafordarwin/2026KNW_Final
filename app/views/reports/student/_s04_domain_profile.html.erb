@@ -1,0 +1,23 @@
+<section class="report-section">
+  <h2>S-04 Domain Profile</h2>
+  <table class="report-table">
+    <thead>
+      <tr>
+        <th>Domain</th>
+        <th>Score</th>
+        <th>Percentile</th>
+        <th>Chart</th>
+      </tr>
+    </thead>
+    <tbody>
+      <% @presenter.domain_scores.each do |domain, score| %>
+        <tr>
+          <td><%= domain %></td>
+          <td><%= score %></td>
+          <td><%= @presenter.domain_percentiles[domain] %></td>
+          <td><%= report_bar(score) %></td>
+        </tr>
+      <% end %>
+    </tbody>
+  </table>
+</section>

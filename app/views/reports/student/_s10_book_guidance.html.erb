@@ -1,0 +1,9 @@
+<section class="report-section">
+  <h2>S-10 Book Guidance</h2>
+  <ul>
+    <% @presenter.selected_books.each do |book| %>
+      <li><%= book.title %> - <%= book.author %></li>
+    <% end %>
+  </ul>
+  <pre><%= JSON.pretty_generate(@presenter.book_guidance&.guidance_json || {}) %></pre>
+</section>

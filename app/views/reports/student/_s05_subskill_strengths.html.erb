@@ -1,0 +1,26 @@
+<section class="report-section">
+  <h2>S-05 Subskill Strengths</h2>
+  <table class="report-table">
+    <thead>
+      <tr>
+        <th>Subskill</th>
+        <th>Score</th>
+        <th>Chart</th>
+      </tr>
+    </thead>
+    <tbody>
+      <% @presenter.subskill_scores.each do |subskill, score| %>
+        <tr>
+          <td><%= subskill %></td>
+          <td><%= score %></td>
+          <td><%= report_bar(score) %></td>
+        </tr>
+      <% end %>
+    </tbody>
+  </table>
+  <p>
+    Top subskills:
+    <%= @presenter.top_subskills.map { |pair| "#{pair[0]}(#{pair[1]})" }.join(", ") %>
+  </p>
+  <pre><%= JSON.pretty_generate(@presenter.subskill_synthesis || {}) %></pre>
+</section>

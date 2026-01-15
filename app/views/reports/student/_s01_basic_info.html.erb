@@ -1,0 +1,9 @@
+<section class="report-section">
+  <h2>S-01 Cover / Basic Info</h2>
+  <p>
+    Student: <%= @presenter.student&.name %><br>
+    School: <%= @presenter.school&.name %><br>
+    Class: <%= @presenter.school_class&.name %> (Grade <%= @presenter.school_class&.grade %>)<br>
+    Session: <%= @presenter.session&.id %>
+  </p>
+</section>

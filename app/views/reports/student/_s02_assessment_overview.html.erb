@@ -1,0 +1,9 @@
+<section class="report-section">
+  <h2>S-02 Assessment Overview</h2>
+  <p>
+    Version: <%= @presenter.assessment_version&.name %><br>
+    Items: <%= @presenter.assessment_items.count %><br>
+    Domains: <%= @presenter.assessment_domains.join(", ") %><br>
+    Subskills: <%= @presenter.assessment_subskills.join(", ") %>
+  </p>
+</section>

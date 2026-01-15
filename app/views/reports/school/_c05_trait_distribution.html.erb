@@ -1,0 +1,21 @@
+<section class="report-section">
+  <h2>C-05 Trait Distribution</h2>
+  <table class="report-table">
+    <thead>
+      <tr>
+        <th>Trait</th>
+        <th>Ratio</th>
+        <th>Chart</th>
+      </tr>
+    </thead>
+    <tbody>
+      <% @presenter.trait_aggs.each do |agg| %>
+        <tr>
+          <td><%= agg.trait_type %></td>
+          <td><%= agg.ratio %></td>
+          <td><%= report_bar(agg.ratio * 100) %></td>
+        </tr>
+      <% end %>
+    </tbody>
+  </table>
+</section>
