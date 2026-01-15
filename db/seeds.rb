@@ -194,6 +194,21 @@ ReportAccess.create!(
   expires_at: 30.days.from_now
 )
 
+school_report = Report.create!(
+  scope: "school",
+  session: session,
+  version: "v1",
+  status: "draft",
+  template_version: "t1",
+  storage_key: "reports/school/#{session.id}.pdf"
+)
+ReportAccess.create!(
+  report: school_report,
+  subject_user: school_manager,
+  can_view: true,
+  can_download: true
+)
+
 book1 = BookCatalog.create!(
   isbn: "9780000000011",
   title: "The Kind Neighbor",

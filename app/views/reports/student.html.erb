@@ -1,0 +1,44 @@
+<h1>Student Report</h1>
+
+<h2>S-01 Basic Info</h2>
+<p>
+  Student: <%= @presenter.student&.name %><br>
+  School: <%= @presenter.school&.name %><br>
+  Class: <%= @presenter.school_class&.name %> (Grade <%= @presenter.school_class&.grade %>)<br>
+  Session: <%= @presenter.session&.id %>
+</p>
+
+<h2>S-02 Assessment Overview</h2>
+<p>
+  Version: <%= @presenter.assessment_version&.name %><br>
+  Items: <%= @presenter.assessment_version&.items&.count || 0 %>
+</p>
+
+<h2>S-03 Executive Summary</h2>
+<p><%= @presenter.executive_summary %></p>
+
+<h2>S-04 Domain Profile</h2>
+<pre><%= JSON.pretty_generate(@presenter.metrics_result&.domain_scores_json || {}) %></pre>
+
+<h2>S-05 Subskill Strengths</h2>
+<pre><%= JSON.pretty_generate(@presenter.subskill_synthesis || {}) %></pre>
+
+<h2>S-06 Item Analysis</h2>
+<pre><%= JSON.pretty_generate(@presenter.item_analysis || []) %></pre>
+
+<h2>S-08 Trait</h2>
+<p>Type: <%= @presenter.trait_result&.trait_type %></p>
+
+<h2>S-09 Domain Guidance</h2>
+<pre><%= JSON.pretty_generate(@presenter.domain_guidance || {}) %></pre>
+
+<h2>S-10 Book Guidance</h2>
+<ul>
+  <% @presenter.selected_books.each do |book| %>
+    <li><%= book.title %> - <%= book.author %></li>
+  <% end %>
+</ul>
+<pre><%= JSON.pretty_generate(@presenter.book_guidance&.guidance_json || {}) %></pre>
+
+<h2>S-11 Parent Summary</h2>
+<p><%= @presenter.parent_summary %></p>

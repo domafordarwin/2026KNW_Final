@@ -1,0 +1,31 @@
+<h1>School Report</h1>
+
+<h2>C-01 Session Overview</h2>
+<p>
+  School: <%= @presenter.school&.name %><br>
+  Class: <%= @presenter.school_class&.name %> (Grade <%= @presenter.school_class&.grade %>)<br>
+  Version: <%= @presenter.assessment_version&.name %><br>
+  Session: <%= @presenter.session&.id %>
+</p>
+
+<h2>C-02 Participation</h2>
+<p>
+  Submissions: <%= @presenter.session&.submissions&.count || 0 %>
+</p>
+
+<h2>C-03 Domain Distribution</h2>
+<% @presenter.domain_aggs.each do |agg| %>
+  <p><strong><%= agg.domain %></strong> avg: <%= agg.avg %>, std: <%= agg.std %></p>
+  <pre><%= JSON.pretty_generate(agg.dist_json || {}) %></pre>
+<% end %>
+
+<h2>C-04 Subskill Weaknesses</h2>
+<% @presenter.subskill_aggs.each do |agg| %>
+  <p><strong><%= agg.subskill %></strong> avg: <%= agg.avg %></p>
+  <pre><%= JSON.pretty_generate(agg.dist_json || {}) %></pre>
+<% end %>
+
+<h2>C-05 Trait Distribution</h2>
+<% @presenter.trait_aggs.each do |agg| %>
+  <p><strong><%= agg.trait_type %></strong> ratio: <%= agg.ratio %></p>
+<% end %>
