@@ -5,6 +5,7 @@ Thumbs.db
 # Env
 .env
 .env.*
+!.env.example
 
 # Node
 node_modules/
@@ -28,4 +29,3 @@ dist/
 build/
 # Ignore key files for decrypting credentials and more.
 /config/*.key
-
