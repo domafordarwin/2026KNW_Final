@@ -1,0 +1,378 @@
+<% content_for :head do %>
+<style>
+  .stats-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+    gap: 15px;
+    margin-bottom: 25px;
+  }
+
+  .stat-card {
+    background: #fff;
+    border: 1px solid #e0e0e0;
+    border-radius: 8px;
+    padding: 20px;
+    text-align: center;
+  }
+
+  .stat-card .label {
+    font-size: 0.85rem;
+    color: #666;
+    margin-bottom: 8px;
+  }
+
+  .stat-card .value {
+    font-size: 2rem;
+    font-weight: bold;
+    color: #333;
+  }
+
+  .stat-card .value.highlight {
+    color: #1976d2;
+  }
+
+  .stat-card .sub-value {
+    font-size: 0.8rem;
+    color: #999;
+    margin-top: 5px;
+  }
+
+  .dashboard-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 20px;
+    margin-bottom: 25px;
+  }
+
+  .dashboard-grid.full-width {
+    grid-template-columns: 1fr;
+  }
+
+  .chart-container {
+    min-height: 200px;
+    display: flex;
+    align-items: flex-end;
+    gap: 10px;
+    padding: 20px 0;
+  }
+
+  .bar-chart {
+    display: flex;
+    align-items: flex-end;
+    justify-content: space-around;
+    height: 180px;
+    width: 100%;
+  }
+
+  .bar-item {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    flex: 1;
+  }
+
+  .bar {
+    width: 40px;
+    background: linear-gradient(180deg, #42a5f5 0%, #1976d2 100%);
+    border-radius: 4px 4px 0 0;
+    transition: height 0.3s ease;
+  }
+
+  .bar-label {
+    font-size: 0.75rem;
+    margin-top: 8px;
+    color: #666;
+  }
+
+  .bar-value {
+    font-size: 0.75rem;
+    font-weight: bold;
+    margin-bottom: 5px;
+    color: #333;
+  }
+
+  .progress-bar {
+    height: 12px;
+    background: #e0e0e0;
+    border-radius: 6px;
+    overflow: hidden;
+    margin-top: 8px;
+  }
+
+  .progress-fill {
+    height: 100%;
+    background: linear-gradient(90deg, #4caf50 0%, #2e7d32 100%);
+    border-radius: 6px;
+    transition: width 0.3s ease;
+  }
+
+  .class-list {
+    max-height: 300px;
+    overflow-y: auto;
+  }
+
+  .class-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 12px 0;
+    border-bottom: 1px solid #f0f0f0;
+  }
+
+  .class-item:last-child {
+    border-bottom: none;
+  }
+
+  .weak-area-item {
+    display: flex;
+    align-items: center;
+    padding: 10px 0;
+    border-bottom: 1px solid #f0f0f0;
+  }
+
+  .weak-area-item .rank {
+    width: 30px;
+    height: 30px;
+    border-radius: 50%;
+    background: #ffecb3;
+    color: #ff8f00;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: bold;
+    font-size: 0.85rem;
+    margin-right: 12px;
+  }
+
+  .weak-area-item .name {
+    flex: 1;
+  }
+
+  .weak-area-item .score {
+    font-weight: bold;
+    color: #f57c00;
+  }
+
+  .grade-badge {
+    display: inline-block;
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+    text-align: center;
+    line-height: 32px;
+    font-weight: bold;
+    font-size: 0.9rem;
+    margin-right: 5px;
+  }
+
+  .grade-badge.A { background: #c8e6c9; color: #2e7d32; }
+  .grade-badge.B { background: #dcedc8; color: #558b2f; }
+  .grade-badge.C { background: #fff9c4; color: #f57f17; }
+  .grade-badge.D { background: #ffe0b2; color: #e65100; }
+  .grade-badge.F { background: #ffcdd2; color: #c62828; }
+
+  .recent-list {
+    max-height: 250px;
+    overflow-y: auto;
+  }
+
+  .recent-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 10px 0;
+    border-bottom: 1px solid #f0f0f0;
+    font-size: 0.9rem;
+  }
+
+  .recent-item:last-child {
+    border-bottom: none;
+  }
+
+  .time-badge {
+    font-size: 0.75rem;
+    color: #999;
+  }
+</style>
+<% end %>
+
+<div class="header">
+  <h2>학교 관리자 대시보드</h2>
+</div>
+
+<!-- 주요 통계 카드 -->
+<div class="stats-grid">
+  <div class="stat-card">
+    <div class="label">전체 학생</div>
+    <div class="value"><%= @stats[:students] %></div>
+  </div>
+  <div class="stat-card">
+    <div class="label">학급 수</div>
+    <div class="value"><%= @stats[:classes] %></div>
+  </div>
+  <div class="stat-card">
+    <div class="label">활성 세션</div>
+    <div class="value highlight"><%= @stats[:active_sessions] %></div>
+    <div class="sub-value">전체 <%= @stats[:sessions] %>개</div>
+  </div>
+  <div class="stat-card">
+    <div class="label">평가 완료율</div>
+    <div class="value"><%= @stats[:completion_rate] %>%</div>
+    <div class="sub-value"><%= @stats[:submissions_completed] %>/<%= @stats[:submissions_total] %> 제출</div>
+  </div>
+  <div class="stat-card">
+    <div class="label">평균 점수</div>
+    <div class="value"><%= @stats[:average_score] %></div>
+    <div class="sub-value">100점 만점</div>
+  </div>
+  <div class="stat-card">
+    <div class="label">보고서</div>
+    <div class="value"><%= @stats[:reports] %></div>
+    <div class="sub-value">학교 <%= @stats[:school_reports] %> / 학생 <%= @stats[:student_reports] %></div>
+  </div>
+</div>
+
+<div class="dashboard-grid">
+  <!-- 영역별 평균 점수 -->
+  <div class="card">
+    <h3>영역별 평균 점수</h3>
+    <% if @domain_stats.any? %>
+      <div class="bar-chart">
+        <% max_score = [@domain_stats.values.max || 1, 1].max %>
+        <% @domain_stats.each do |domain, score| %>
+          <div class="bar-item">
+            <div class="bar-value"><%= score %></div>
+            <div class="bar" style="height: <%= (score / max_score.to_f * 150).round %>px;"></div>
+            <div class="bar-label"><%= domain_label(domain) %></div>
+          </div>
+        <% end %>
+      </div>
+    <% else %>
+      <p style="text-align: center; color: #999; padding: 40px;">아직 영역별 통계 데이터가 없습니다.</p>
+    <% end %>
+  </div>
+
+  <!-- 등급 분포 -->
+  <div class="card">
+    <h3>등급 분포</h3>
+    <% if @grade_distribution.any? && @grade_distribution.values.sum > 0 %>
+      <div class="bar-chart">
+        <% max_count = [@grade_distribution.values.max || 1, 1].max %>
+        <% @grade_distribution.each do |grade, count| %>
+          <div class="bar-item">
+            <div class="bar-value"><%= count %>명</div>
+            <div class="bar" style="height: <%= (count / max_count.to_f * 150).round %>px; background: <%= grade_color(grade) %>;"></div>
+            <div class="bar-label">
+              <span class="grade-badge <%= grade %>"><%= grade %></span>
+            </div>
+          </div>
+        <% end %>
+      </div>
+    <% else %>
+      <p style="text-align: center; color: #999; padding: 40px;">아직 등급 분포 데이터가 없습니다.</p>
+    <% end %>
+  </div>
+</div>
+
+<div class="dashboard-grid">
+  <!-- 학급별 참여율 -->
+  <div class="card">
+    <h3>학급별 참여율</h3>
+    <% if @class_participation.any? %>
+      <div class="class-list">
+        <% @class_participation.each do |cp| %>
+          <div class="class-item">
+            <div>
+              <strong><%= cp[:grade] %>학년 <%= cp[:name] %></strong>
+              <div style="font-size: 0.85rem; color: #666;">
+                <%= cp[:submitted] %>/<%= cp[:total] %>명 완료
+              </div>
+            </div>
+            <div style="width: 120px;">
+              <div style="text-align: right; font-weight: bold; color: #1976d2;"><%= cp[:rate] %>%</div>
+              <div class="progress-bar">
+                <div class="progress-fill" style="width: <%= cp[:rate] %>%;"></div>
+              </div>
+            </div>
+          </div>
+        <% end %>
+      </div>
+    <% else %>
+      <p style="text-align: center; color: #999; padding: 40px;">학급 정보가 없습니다.</p>
+    <% end %>
+  </div>
+
+  <!-- 취약 영역 (하위 5개) -->
+  <div class="card">
+    <h3>집중 지도 필요 영역 (하위 5개)</h3>
+    <% if @weak_areas.any? %>
+      <% @weak_areas.each_with_index do |area, idx| %>
+        <div class="weak-area-item">
+          <div class="rank"><%= idx + 1 %></div>
+          <div class="name"><%= area[:subskill] %></div>
+          <div class="score"><%= area[:avg] %>점</div>
+        </div>
+      <% end %>
+    <% else %>
+      <p style="text-align: center; color: #999; padding: 40px;">아직 하위 영역 데이터가 없습니다.</p>
+    <% end %>
+  </div>
+</div>
+
+<div class="dashboard-grid">
+  <!-- 최근 제출물 -->
+  <div class="card">
+    <h3>최근 제출물</h3>
+    <% if @recent_submissions.any? %>
+      <div class="recent-list">
+        <% @recent_submissions.each do |sub| %>
+          <div class="recent-item">
+            <div>
+              <strong><%= sub.student&.name %></strong>
+              <div style="font-size: 0.8rem; color: #666;"><%= sub.session&.assessment_version&.name %></div>
+            </div>
+            <div class="time-badge"><%= time_ago_in_words(sub.submitted_at) %> 전</div>
+          </div>
+        <% end %>
+      </div>
+    <% else %>
+      <p style="text-align: center; color: #999; padding: 40px;">최근 제출물이 없습니다.</p>
+    <% end %>
+  </div>
+
+  <!-- 최근 세션 -->
+  <div class="card">
+    <h3>최근 평가 세션</h3>
+    <% if @recent_sessions.any? %>
+      <div class="recent-list">
+        <% @recent_sessions.each do |session| %>
+          <div class="recent-item">
+            <div>
+              <strong><%= session.assessment_version&.name %></strong>
+              <div style="font-size: 0.8rem; color: #666;">
+                <span class="badge badge-<%= session.status == 'active' ? 'success' : 'secondary' %>">
+                  <%= session.status == 'active' ? '활성' : session.status %>
+                </span>
+                접속코드: <%= session.access_code %>
+              </div>
+            </div>
+            <div class="time-badge"><%= session.created_at.strftime("%m/%d") %></div>
+          </div>
+        <% end %>
+      </div>
+    <% else %>
+      <p style="text-align: center; color: #999; padding: 40px;">평가 세션이 없습니다.</p>
+    <% end %>
+  </div>
+</div>
+
+<div class="card">
+  <h3>빠른 작업</h3>
+  <div class="actions" style="gap: 15px; margin-top: 15px;">
+    <%= link_to "학생 추가", new_school_manager_student_path, class: "btn btn-primary" %>
+    <%= link_to "학생 일괄 등록", import_school_manager_students_path, class: "btn btn-primary" %>
+    <%= link_to "학급 생성", new_school_manager_class_path, class: "btn btn-primary" %>
+    <%= link_to "보고서 보기", school_manager_reports_path, class: "btn btn-secondary" %>
+  </div>
+</div>
+

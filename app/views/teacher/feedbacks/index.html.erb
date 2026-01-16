@@ -1,0 +1,60 @@
+<div class="header">
+  <h2>피드백 작업 공간</h2>
+</div>
+
+<div class="card">
+  <h3>검토 대기 중 (<%= @pending_submissions.count %>)</h3>
+  <table>
+    <thead>
+      <tr>
+        <th>학생</th>
+        <th>세션</th>
+        <th>제출일</th>
+        <th>작업</th>
+      </tr>
+    </thead>
+    <tbody>
+      <% @pending_submissions.each do |sub| %>
+        <tr>
+          <td><%= sub.student&.name %></td>
+          <td><%= sub.session&.assessment_version&.name %></td>
+          <td><%= sub.submitted_at&.strftime("%Y-%m-%d %H:%M") %></td>
+          <td>
+            <%= link_to "검토 시작", teacher_submission_feedback_path(sub), class: "btn btn-sm btn-primary" %>
+          </td>
+        </tr>
+      <% end %>
+    </tbody>
+  </table>
+  <% if @pending_submissions.empty? %>
+    <p style="padding: 20px; text-align: center; color: #666;">대기 중인 제출물이 없습니다.</p>
+  <% end %>
+</div>
+
+<div class="card">
+  <h3>전체 피드백</h3>
+  <table>
+    <thead>
+      <tr>
+        <th>학생</th>
+        <th>세션</th>
+        <th>상태</th>
+        <th>수정일</th>
+        <th>작업</th>
+      </tr>
+    </thead>
+    <tbody>
+      <% @feedbacks.each do |fb| %>
+        <tr>
+          <td><%= fb.submission&.student&.name %></td>
+          <td><%= fb.submission&.session&.assessment_version&.name %></td>
+          <td><span class="badge badge-<%= fb.status == 'approved' ? 'success' : 'warning' %>"><%= fb.status %></span></td>
+          <td><%= fb.updated_at.strftime("%Y-%m-%d %H:%M") %></td>
+          <td>
+            <%= link_to "수정", teacher_submission_feedback_path(fb.submission), class: "btn btn-sm btn-secondary" %>
+          </td>
+        </tr>
+      <% end %>
+    </tbody>
+  </table>
+</div>

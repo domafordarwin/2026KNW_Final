@@ -1,0 +1,44 @@
+<div class="admin-header">
+  <h2>문항 #<%= @item.id %></h2>
+  <div class="actions">
+    <%= link_to "수정", edit_admin_passage_item_path(@passage, @item), class: "btn btn-secondary" %>
+    <%= link_to "지문으로 돌아가기", admin_passage_path(@passage), class: "btn btn-secondary" %>
+  </div>
+</div>
+
+<div class="card">
+  <h3>문항 상세</h3>
+  <table>
+    <tr><th style="width: 150px;">유형</th><td><span class="badge badge-info"><%= @item.item_type %></span></td></tr>
+    <tr><th>영역</th><td><%= @item.domain || "설정 안 됨" %></td></tr>
+    <tr><th>하위 영역</th><td><%= @item.subskill || "설정 안 됨" %></td></tr>
+    <tr><th>난이도</th><td><%= @item.difficulty || "설정 안 됨" %></td></tr>
+    <tr><th>배점</th><td><%= @item.points %></td></tr>
+  </table>
+</div>
+
+<div class="card">
+  <h3>질문</h3>
+  <div style="background: #f9f9f9; padding: 15px; border-radius: 4px; white-space: pre-wrap;"><%= @item.prompt %></div>
+</div>
+
+<% if @item.choices_json.present? %>
+<div class="card">
+  <h3>선택지</h3>
+  <pre style="background: #f9f9f9; padding: 15px; border-radius: 4px;"><%= JSON.pretty_generate(JSON.parse(@item.choices_json)) rescue @item.choices_json %></pre>
+</div>
+<% end %>
+
+<% if @item.answer_key_json.present? %>
+<div class="card">
+  <h3>정답</h3>
+  <pre style="background: #f9f9f9; padding: 15px; border-radius: 4px;"><%= JSON.pretty_generate(JSON.parse(@item.answer_key_json)) rescue @item.answer_key_json %></pre>
+</div>
+<% end %>
+
+<% if @item.rubric_json.present? %>
+<div class="card">
+  <h3>채점 기준</h3>
+  <pre style="background: #f9f9f9; padding: 15px; border-radius: 4px;"><%= JSON.pretty_generate(JSON.parse(@item.rubric_json)) rescue @item.rubric_json %></pre>
+</div>
+<% end %>

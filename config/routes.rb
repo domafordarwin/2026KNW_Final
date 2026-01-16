@@ -1,19 +1,101 @@
 Rails.application.routes.draw do
-  # Define your application routes per the DSL in https://guides.rubyonrails.org/routing.html
+  # Root
+  root "dashboard#index"
 
-  # Reveal health status on /up that returns 200 if the app boots with no exceptions, otherwise 500.
-  # Can be used by load balancers and uptime monitors to verify that the app is live.
+  # Authentication
+  get "login", to: "sessions#new"
+  post "login", to: "sessions#create"
+  match "logout", to: "sessions#destroy", via: [:get, :delete]
+
+  # Dashboard
+  get "dashboard", to: "dashboard#home"
+
+  # Health check
   get "up" => "rails/health#show", as: :rails_health_check
 
-  # Render dynamic PWA files from app/views/pwa/* (remember to link manifest in application.html.erb)
-  # get "manifest" => "rails/pwa#manifest", as: :pwa_manifest
-  # get "service-worker" => "rails/pwa#service_worker", as: :pwa_service_worker
-
+  # Reports & Teacher Feedback
   resources :reports, only: [:show]
   resources :submissions, only: [] do
     resource :teacher_feedback, only: [:show, :update]
   end
 
+  # Admin namespace
+  namespace :admin do
+    root "dashboard#index"
+    resources :passages do
+      resources :items, except: [:index]
+    end
+    resources :items, only: [:index]
+    resources :assessment_versions do
+      member do
+        post :publish
+      end
+    end
+    resources :book_catalogs
+    resources :users
+  end
+
+  # School Manager namespace
+  namespace :school_manager do
+    root "dashboard#index"
+    resources :students do
+      collection do
+        get :import
+        post :import, action: :create_import
+      end
+    end
+    resources :classes, controller: "school_classes"
+    resources :reports, only: [:index, :show]
+  end
+
+  # Teacher namespace
+  namespace :teacher do
+    root "dashboard#index"
+    resources :sessions do
+      member do
+        post :distribute
+        get :progress
+      end
+    end
+    resources :submissions, only: [:index, :show] do
+      resource :feedback, controller: "feedbacks", only: [:show, :update] do
+        member do
+          post :approve
+          post :regenerate_section
+        end
+      end
+    end
+    resources :feedbacks, only: [:index]
+    resources :reports, only: [:index, :show] do
+      member do
+        post :generate
+        get :preview
+        get :download
+        post :share
+      end
+    end
+  end
+
+  # Student namespace
+  namespace :student do
+    root "dashboard#index"
+    resources :assessments, only: [:index, :show] do
+      member do
+        get :take
+        post :submit
+        patch :save_progress
+      end
+    end
+    resources :reports, only: [:index, :show]
+  end
+
+  # Parent namespace
+  namespace :parent do
+    root "dashboard#index"
+    resources :reports, only: [:index, :show]
+  end
+
+  # API namespace
   namespace :api do
     namespace :v1 do
       resources :schools, only: [:index, :show]

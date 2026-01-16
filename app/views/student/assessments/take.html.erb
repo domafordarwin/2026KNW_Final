@@ -1,0 +1,61 @@
+<h2><%= @session.assessment_version&.name %></h2>
+
+<%= form_with url: submit_student_assessment_path(@session), method: :post, local: true, id: "assessment-form" do |f| %>
+  <% @items.each_with_index do |item, index| %>
+    <div class="card" style="margin-top: 20px;">
+      <h3>문항 <%= index + 1 %></h3>
+
+      <% if item.passage %>
+        <div style="background: #f9f9f9; padding: 15px; border-radius: 4px; margin-bottom: 15px;">
+          <strong><%= item.passage.title %></strong>
+          <p style="white-space: pre-wrap; margin-top: 10px;"><%= item.passage.text %></p>
+        </div>
+      <% end %>
+
+      <p style="margin-bottom: 15px;"><%= item.prompt %></p>
+
+      <% saved_answer = @responses[item.id]&.answer_json %>
+
+      <% if item.item_type == "multiple_choice" && item.choices_json.present? %>
+        <% choices = JSON.parse(item.choices_json) rescue [] %>
+        <% choices.each do |choice| %>
+          <div style="margin-bottom: 8px;">
+            <label>
+              <%= radio_button_tag "responses[#{item.id}]", choice, saved_answer == choice %>
+              <%= choice %>
+            </label>
+          </div>
+        <% end %>
+      <% else %>
+        <%= text_area_tag "responses[#{item.id}]", saved_answer, rows: 4, style: "width: 100%; padding: 10px; border: 1px solid #ddd; border-radius: 4px;" %>
+      <% end %>
+    </div>
+  <% end %>
+
+  <div style="margin-top: 30px; display: flex; gap: 15px;">
+    <%= button_tag "임시 저장", type: "button", id: "save-btn", class: "btn btn-secondary" %>
+    <%= f.submit "평가 제출", class: "btn btn-primary", data: { confirm: "제출하시겠습니까? 제출 후에는 답변을 수정할 수 없습니다." } %>
+  </div>
+<% end %>
+
+<script>
+  document.getElementById('save-btn').addEventListener('click', function() {
+    const form = document.getElementById('assessment-form');
+    const formData = new FormData(form);
+
+    fetch('<%= save_progress_student_assessment_path(@session) %>', {
+      method: 'PATCH',
+      body: formData,
+      headers: {
+        'X-CSRF-Token': document.querySelector('meta[name="csrf-token"]').content
+      }
+    })
+    .then(response => response.json())
+    .then(data => {
+      alert(data.message || '저장되었습니다!');
+    })
+    .catch(error => {
+      alert('저장 중 오류가 발생했습니다');
+    });
+  });
+</script>

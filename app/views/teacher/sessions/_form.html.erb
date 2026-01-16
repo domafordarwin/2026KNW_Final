@@ -1,0 +1,37 @@
+<%= form_with model: [:teacher, @session], local: true do |f| %>
+  <% if @session.errors.any? %>
+    <div class="alert alert-error">
+      <% @session.errors.full_messages.each do |msg| %><p><%= msg %></p><% end %>
+    </div>
+  <% end %>
+
+  <div class="form-group">
+    <%= f.label :assessment_version_id, "평가 버전" %>
+    <%= f.collection_select :assessment_version_id, AssessmentVersion.where(status: "published"), :id, :name, { prompt: "버전 선택" }, required: true %>
+  </div>
+
+  <div class="form-group">
+    <%= f.label :school_id, "학교" %>
+    <%= f.collection_select :school_id, School.all, :id, :name, { prompt: "학교 선택" }, required: true %>
+  </div>
+
+  <div class="form-group">
+    <%= f.label :class_id, "학급" %>
+    <%= f.collection_select :class_id, SchoolClass.all, :id, ->(c) { "#{c.grade} - #{c.name}" }, { prompt: "학급 선택" }, required: true %>
+  </div>
+
+  <div class="form-group">
+    <%= f.label :start_at, "시작 시간" %>
+    <%= f.datetime_local_field :start_at %>
+  </div>
+
+  <div class="form-group">
+    <%= f.label :end_at, "종료 시간" %>
+    <%= f.datetime_local_field :end_at %>
+  </div>
+
+  <div class="actions">
+    <%= f.submit class: "btn btn-primary" %>
+    <%= link_to "취소", teacher_sessions_path, class: "btn btn-secondary" %>
+  </div>
+<% end %>

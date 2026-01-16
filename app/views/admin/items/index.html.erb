@@ -1,0 +1,51 @@
+<div class="admin-header">
+  <h2>전체 문항</h2>
+</div>
+
+<div class="card">
+  <div class="filters">
+    <%= form_with url: admin_items_path, method: :get, local: true, style: "display: flex; gap: 10px; flex-wrap: wrap;" do %>
+      <%= select_tag :domain, options_for_select([["전체 영역", ""], "vocabulary", "comprehension", "inference", "analysis", "fluency"], params[:domain]) %>
+      <%= select_tag :item_type, options_for_select([["전체 유형", ""], "multiple_choice", "short_answer", "essay"], params[:item_type]) %>
+      <%= select_tag :difficulty, options_for_select([["전체 난이도", ""], "easy", "medium", "hard"], params[:difficulty]) %>
+      <%= submit_tag "필터", class: "btn btn-secondary" %>
+    <% end %>
+  </div>
+
+  <table>
+    <thead>
+      <tr>
+        <th>ID</th>
+        <th>지문</th>
+        <th>유형</th>
+        <th>영역</th>
+        <th>하위 영역</th>
+        <th>난이도</th>
+        <th>배점</th>
+        <th>작업</th>
+      </tr>
+    </thead>
+    <tbody>
+      <% @items.each do |item| %>
+        <tr>
+          <td><%= item.id %></td>
+          <td><%= item.passage ? link_to(item.passage.title.truncate(30), admin_passage_path(item.passage)) : "N/A" %></td>
+          <td><span class="badge badge-info"><%= item.item_type %></span></td>
+          <td><%= item.domain %></td>
+          <td><%= item.subskill %></td>
+          <td><%= item.difficulty %></td>
+          <td><%= item.points %></td>
+          <td class="actions">
+            <% if item.passage %>
+              <%= link_to "보기", admin_passage_item_path(item.passage, item), class: "btn btn-sm btn-secondary" %>
+            <% end %>
+          </td>
+        </tr>
+      <% end %>
+    </tbody>
+  </table>
+
+  <% if @items.empty? %>
+    <p style="padding: 20px; text-align: center; color: #666;">문항이 없습니다.</p>
+  <% end %>
+</div>

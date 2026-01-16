@@ -1,0 +1,61 @@
+<%= form_with model: [:admin, @passage, @item], local: true do |f| %>
+  <% if @item.errors.any? %>
+    <div class="alert alert-error">
+      <ul>
+        <% @item.errors.full_messages.each do |msg| %>
+          <li><%= msg %></li>
+        <% end %>
+      </ul>
+    </div>
+  <% end %>
+
+  <div class="form-group">
+    <%= f.label :item_type, "유형" %>
+    <%= f.select :item_type, options_for_select([["유형 선택", ""], ["객관식", "multiple_choice"], ["단답형", "short_answer"], ["서술형", "essay"]], @item.item_type), {}, required: true %>
+  </div>
+
+  <div class="form-group">
+    <%= f.label :domain, "영역" %>
+    <%= f.select :domain, options_for_select([["영역 선택", ""], "vocabulary", "comprehension", "inference", "analysis", "fluency"], @item.domain) %>
+  </div>
+
+  <div class="form-group">
+    <%= f.label :subskill, "하위 영역" %>
+    <%= f.text_field :subskill, placeholder: "예: main_idea, context_clues" %>
+  </div>
+
+  <div class="form-group">
+    <%= f.label :difficulty, "난이도" %>
+    <%= f.select :difficulty, options_for_select([["난이도 선택", ""], "easy", "medium", "hard"], @item.difficulty) %>
+  </div>
+
+  <div class="form-group">
+    <%= f.label :prompt, "질문" %>
+    <%= f.text_area :prompt, rows: 4, required: true %>
+  </div>
+
+  <div class="form-group">
+    <%= f.label :choices_json, "선택지 (객관식용 JSON)" %>
+    <%= f.text_area :choices_json, rows: 4, placeholder: '["A) 첫 번째 선택지", "B) 두 번째 선택지", "C) 세 번째 선택지", "D) 네 번째 선택지"]' %>
+  </div>
+
+  <div class="form-group">
+    <%= f.label :answer_key_json, "정답 (JSON)" %>
+    <%= f.text_area :answer_key_json, rows: 2, placeholder: '"A" 또는 {"correct": "A"} 또는 ["키워드1", "키워드2"]' %>
+  </div>
+
+  <div class="form-group">
+    <%= f.label :rubric_json, "채점 기준 (서술형/단답형용 JSON)" %>
+    <%= f.text_area :rubric_json, rows: 6, placeholder: '{"criteria": [{"name": "내용", "max_score": 3}, {"name": "구성", "max_score": 2}]}' %>
+  </div>
+
+  <div class="form-group">
+    <%= f.label :points, "배점" %>
+    <%= f.number_field :points, min: 1, value: @item.points || 1 %>
+  </div>
+
+  <div class="actions">
+    <%= f.submit class: "btn btn-primary" %>
+    <%= link_to "취소", admin_passage_path(@passage), class: "btn btn-secondary" %>
+  </div>
+<% end %>

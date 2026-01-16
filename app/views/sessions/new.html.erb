@@ -1,0 +1,123 @@
+<div class="login-container">
+  <div class="login-box">
+    <h1>문해력 보고서 시스템</h1>
+    <h2>로그인</h2>
+
+    <% if flash[:alert] %>
+      <div class="alert alert-error"><%= flash[:alert] %></div>
+    <% end %>
+
+    <%= form_with url: login_path, method: :post, local: true, class: "login-form" do |f| %>
+      <div class="form-group">
+        <%= f.label :email, "이메일" %>
+        <%= f.email_field :email, required: true, autofocus: true, placeholder: "이메일을 입력하세요" %>
+      </div>
+
+      <div class="form-group">
+        <%= f.label :password, "비밀번호" %>
+        <%= f.password_field :password, required: true, placeholder: "비밀번호를 입력하세요" %>
+      </div>
+
+      <div class="form-actions">
+        <%= f.submit "로그인", class: "btn btn-primary" %>
+      </div>
+    <% end %>
+  </div>
+</div>
+
+<style>
+  .login-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 80vh;
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  }
+
+  .login-box {
+    background: white;
+    padding: 40px;
+    border-radius: 8px;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
+    width: 100%;
+    max-width: 400px;
+  }
+
+  .login-box h1 {
+    margin: 0 0 8px 0;
+    font-size: 1.5rem;
+    color: #333;
+    text-align: center;
+  }
+
+  .login-box h2 {
+    margin: 0 0 24px 0;
+    font-size: 1.1rem;
+    color: #666;
+    text-align: center;
+    font-weight: normal;
+  }
+
+  .login-form .form-group {
+    margin-bottom: 20px;
+  }
+
+  .login-form label {
+    display: block;
+    margin-bottom: 6px;
+    font-weight: 500;
+    color: #333;
+  }
+
+  .login-form input[type="email"],
+  .login-form input[type="password"] {
+    width: 100%;
+    padding: 12px;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    font-size: 1rem;
+    box-sizing: border-box;
+  }
+
+  .login-form input:focus {
+    outline: none;
+    border-color: #667eea;
+    box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+  }
+
+  .form-actions {
+    margin-top: 24px;
+  }
+
+  .btn {
+    display: inline-block;
+    padding: 12px 24px;
+    border: none;
+    border-radius: 4px;
+    font-size: 1rem;
+    cursor: pointer;
+    text-decoration: none;
+  }
+
+  .btn-primary {
+    width: 100%;
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    color: white;
+  }
+
+  .btn-primary:hover {
+    opacity: 0.9;
+  }
+
+  .alert {
+    padding: 12px;
+    border-radius: 4px;
+    margin-bottom: 20px;
+  }
+
+  .alert-error {
+    background: #fee;
+    color: #c00;
+    border: 1px solid #fcc;
+  }
+</style>

@@ -1,0 +1,57 @@
+<div class="admin-header">
+  <h2>사용자</h2>
+  <%= link_to "사용자 생성", new_admin_user_path, class: "btn btn-primary" %>
+</div>
+
+<div class="card">
+  <div class="filters">
+    <%= form_with url: admin_users_path, method: :get, local: true, style: "display: flex; gap: 10px; flex-wrap: wrap;" do %>
+      <%= text_field_tag :q, params[:q], placeholder: "이름 또는 이메일 검색..." %>
+      <%= select_tag :role, options_for_select([["전체 역할", ""], ["관리자", "admin"], ["학교 관리자", "school_manager"], ["교사", "teacher"], ["학생", "student"], ["학부모", "parent"]], params[:role]) %>
+      <%= select_tag :status, options_for_select([["전체 상태", ""], ["활성", "active"], ["비활성", "inactive"]], params[:status]) %>
+      <%= submit_tag "필터", class: "btn btn-secondary" %>
+    <% end %>
+  </div>
+
+  <table>
+    <thead>
+      <tr>
+        <th>ID</th>
+        <th>이름</th>
+        <th>이메일</th>
+        <th>역할</th>
+        <th>상태</th>
+        <th>생성일</th>
+        <th>작업</th>
+      </tr>
+    </thead>
+    <tbody>
+      <% @users.each do |user| %>
+        <tr>
+          <td><%= user.id %></td>
+          <td><%= user.name %></td>
+          <td><%= user.email_optional || "-" %></td>
+          <td><span class="badge badge-info"><%= user.role %></span></td>
+          <td>
+            <% if user.status == "active" %>
+              <span class="badge badge-success">활성</span>
+            <% else %>
+              <span class="badge badge-warning">비활성</span>
+            <% end %>
+          </td>
+          <td><%= user.created_at.strftime("%Y-%m-%d") %></td>
+          <td class="actions">
+            <%= link_to "수정", edit_admin_user_path(user), class: "btn btn-sm btn-secondary" %>
+            <% unless user == current_user %>
+              <%= link_to "삭제", admin_user_path(user), method: :delete, data: { confirm: "정말 삭제하시겠습니까?" }, class: "btn btn-sm btn-danger" %>
+            <% end %>
+          </td>
+        </tr>
+      <% end %>
+    </tbody>
+  </table>
+
+  <% if @users.empty? %>
+    <p style="padding: 20px; text-align: center; color: #666;">사용자가 없습니다.</p>
+  <% end %>
+</div>

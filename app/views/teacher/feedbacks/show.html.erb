@@ -1,0 +1,613 @@
+<% content_for :head do %>
+<style>
+  .feedback-workspace {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 20px;
+    margin-top: 20px;
+  }
+
+  .feedback-panel {
+    background: #fff;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    padding: 20px;
+    max-height: 80vh;
+    overflow-y: auto;
+  }
+
+  .feedback-panel h3 {
+    margin-top: 0;
+    padding-bottom: 10px;
+    border-bottom: 2px solid #f0f0f0;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+
+  .feedback-section {
+    margin-bottom: 20px;
+    border: 1px solid #e0e0e0;
+    border-radius: 6px;
+    overflow: hidden;
+  }
+
+  .feedback-section-header {
+    background: #f8f9fa;
+    padding: 12px 15px;
+    font-weight: 600;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    cursor: pointer;
+    border-bottom: 1px solid #e0e0e0;
+  }
+
+  .feedback-section-header:hover {
+    background: #f0f1f2;
+  }
+
+  .feedback-section-content {
+    padding: 15px;
+    font-size: 0.95rem;
+    line-height: 1.6;
+  }
+
+  .feedback-section-content.collapsed {
+    display: none;
+  }
+
+  .section-badge {
+    font-size: 0.75rem;
+    padding: 2px 8px;
+    border-radius: 10px;
+    background: #e0e0e0;
+    color: #555;
+  }
+
+  .section-badge.ai {
+    background: #e3f2fd;
+    color: #1565c0;
+  }
+
+  .section-badge.edited {
+    background: #fff3e0;
+    color: #e65100;
+  }
+
+  .evidence-panel {
+    background: #f8f9fa;
+    border-left: 3px solid #1565c0;
+    padding: 10px 15px;
+    margin-top: 10px;
+    font-size: 0.85rem;
+  }
+
+  .evidence-panel h5 {
+    margin: 0 0 8px 0;
+    color: #1565c0;
+    font-size: 0.9rem;
+  }
+
+  .editable-content {
+    min-height: 80px;
+    border: 1px dashed #ccc;
+    padding: 10px;
+    border-radius: 4px;
+    background: #fff;
+  }
+
+  .editable-content:focus {
+    outline: none;
+    border-color: #1976d2;
+    background: #fafafa;
+  }
+
+  .annotation-btn {
+    font-size: 0.75rem;
+    padding: 3px 8px;
+    margin-left: 5px;
+    background: #fff3e0;
+    border: 1px solid #ffcc80;
+    border-radius: 3px;
+    cursor: pointer;
+  }
+
+  .annotation-btn:hover {
+    background: #ffe0b2;
+  }
+
+  .annotation-note {
+    background: #fffde7;
+    border: 1px solid #fff59d;
+    border-radius: 4px;
+    padding: 8px;
+    margin-top: 8px;
+    font-size: 0.85rem;
+  }
+
+  .annotation-note textarea {
+    width: 100%;
+    border: none;
+    background: transparent;
+    resize: vertical;
+    min-height: 40px;
+    font-size: 0.85rem;
+  }
+
+  .status-bar {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    padding: 15px 20px;
+    background: #f8f9fa;
+    border-radius: 8px;
+    margin-bottom: 20px;
+  }
+
+  .status-indicator {
+    padding: 6px 12px;
+    border-radius: 20px;
+    font-size: 0.85rem;
+    font-weight: 500;
+  }
+
+  .status-indicator.draft {
+    background: #fff3e0;
+    color: #e65100;
+  }
+
+  .status-indicator.approved {
+    background: #e8f5e9;
+    color: #2e7d32;
+  }
+
+  .status-indicator.pending {
+    background: #e3f2fd;
+    color: #1565c0;
+  }
+
+  .watermark-overlay {
+    position: relative;
+  }
+
+  .watermark-overlay::before {
+    content: "초안 - 승인 전";
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%) rotate(-30deg);
+    font-size: 2rem;
+    color: rgba(255, 152, 0, 0.15);
+    font-weight: bold;
+    pointer-events: none;
+    white-space: nowrap;
+    z-index: 1;
+  }
+
+  .diff-indicator {
+    display: inline-block;
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    margin-right: 6px;
+  }
+
+  .diff-indicator.modified {
+    background: #ff9800;
+  }
+
+  .diff-indicator.original {
+    background: #4caf50;
+  }
+
+  .regenerate-btn {
+    font-size: 0.7rem;
+    padding: 2px 6px;
+    background: #e3f2fd;
+    border: 1px solid #90caf9;
+    border-radius: 3px;
+    cursor: pointer;
+    margin-left: 8px;
+  }
+
+  .regenerate-btn:hover {
+    background: #bbdefb;
+  }
+
+  .audit-log {
+    font-size: 0.8rem;
+    color: #666;
+  }
+
+  .audit-log-item {
+    padding: 6px 0;
+    border-bottom: 1px solid #f0f0f0;
+  }
+
+  .btn-group {
+    display: flex;
+    gap: 8px;
+  }
+
+  .toggle-icon {
+    transition: transform 0.2s;
+  }
+
+  .toggle-icon.collapsed {
+    transform: rotate(-90deg);
+  }
+
+  .section-navigation {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    margin-bottom: 15px;
+    padding: 10px;
+    background: #f8f9fa;
+    border-radius: 6px;
+  }
+
+  .section-nav-btn {
+    padding: 5px 10px;
+    font-size: 0.8rem;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    background: #fff;
+    cursor: pointer;
+  }
+
+  .section-nav-btn:hover {
+    background: #f0f0f0;
+  }
+
+  .section-nav-btn.active {
+    background: #1976d2;
+    color: #fff;
+    border-color: #1976d2;
+  }
+</style>
+<% end %>
+
+<div class="header">
+  <h2><%= @submission.student&.name %> 피드백 워크스페이스</h2>
+  <div class="btn-group">
+    <% if @teacher_feedback.persisted? && @teacher_feedback.status == "draft" %>
+      <%= link_to "승인 & 잠금", approve_teacher_submission_feedback_path(@submission), method: :post, data: { confirm: "피드백을 승인하면 더 이상 수정할 수 없습니다. 계속하시겠습니까?" }, class: "btn btn-success" %>
+    <% end %>
+    <%= link_to "목록으로", teacher_feedbacks_path, class: "btn btn-secondary" %>
+  </div>
+</div>
+
+<div class="status-bar">
+  <div>
+    <strong>학생:</strong> <%= @submission.student&.name %>
+  </div>
+  <div>
+    <strong>평가:</strong> <%= @submission.session&.assessment_version&.name %>
+  </div>
+  <div>
+    <strong>제출일:</strong> <%= @submission.submitted_at&.strftime("%Y-%m-%d %H:%M") %>
+  </div>
+  <div>
+    <span class="status-indicator <%= @teacher_feedback.status || 'pending' %>">
+      <%= case @teacher_feedback.status
+          when 'draft' then '초안'
+          when 'approved' then '승인됨'
+          else 'AI 검토 대기'
+          end %>
+    </span>
+  </div>
+</div>
+
+<% sections = [
+  { key: 'executive_summary', label: '종합 요약', type: 'text' },
+  { key: 'subskill_synthesis', label: '하위 영역 분석', type: 'object' },
+  { key: 'item_analysis', label: '문항별 분석', type: 'array' },
+  { key: 'trait_explanation', label: '독자 성향 설명', type: 'text' },
+  { key: 'integrated.domain_guidance', label: '영역별 학습 지도', type: 'object' },
+  { key: 'integrated.book_guidance', label: '도서 추천', type: 'object' },
+  { key: 'integrated.parent_summary', label: '학부모 요약', type: 'text' }
+] %>
+
+<div class="section-navigation">
+  <% sections.each_with_index do |section, idx| %>
+    <button class="section-nav-btn" data-section="section-<%= idx %>">
+      <%= section[:label] %>
+    </button>
+  <% end %>
+</div>
+
+<div class="feedback-workspace">
+  <!-- AI 피드백 패널 (읽기 전용) -->
+  <div class="feedback-panel">
+    <h3>
+      <span>🤖 AI 피드백</span>
+      <span class="section-badge ai">읽기 전용</span>
+    </h3>
+
+    <% sections.each_with_index do |section, idx| %>
+      <div class="feedback-section" id="ai-section-<%= idx %>">
+        <div class="feedback-section-header" onclick="toggleSection('ai-<%= idx %>')">
+          <span>
+            <span class="toggle-icon" id="toggle-ai-<%= idx %>">▼</span>
+            <%= section[:label] %>
+          </span>
+          <%= link_to "재생성", regenerate_section_teacher_submission_feedback_path(@submission, section: section[:key]), method: :post, class: "regenerate-btn", data: { confirm: "이 섹션을 AI로 다시 생성하시겠습니까?" } %>
+        </div>
+        <div class="feedback-section-content" id="content-ai-<%= idx %>">
+          <% value = get_nested_value(@ai_feedback, section[:key]) %>
+          <% if section[:type] == 'text' %>
+            <p><%= value || '(데이터 없음)' %></p>
+          <% elsif section[:type] == 'object' %>
+            <% if value.is_a?(Hash) %>
+              <% value.each do |k, v| %>
+                <div style="margin-bottom: 10px;">
+                  <strong><%= k %>:</strong>
+                  <p style="margin: 5px 0 0 10px;"><%= v.is_a?(String) ? v : v.to_json %></p>
+                </div>
+              <% end %>
+            <% else %>
+              <p>(데이터 없음)</p>
+            <% end %>
+          <% elsif section[:type] == 'array' %>
+            <% if value.is_a?(Array) && value.any? %>
+              <% value.each_with_index do |item, i| %>
+                <div style="margin-bottom: 10px; padding: 8px; background: #f9f9f9; border-radius: 4px;">
+                  <strong>문항 <%= i + 1 %>:</strong>
+                  <p style="margin: 5px 0 0 10px;"><%= item.is_a?(String) ? item : item.to_json %></p>
+                </div>
+              <% end %>
+            <% else %>
+              <p>(데이터 없음)</p>
+            <% end %>
+          <% end %>
+
+          <!-- 근거 패널 -->
+          <% if section[:key] == 'executive_summary' %>
+            <div class="evidence-panel">
+              <h5>📊 근거 데이터</h5>
+              <p><strong>총점:</strong> <%= @submission.scoring_results.sum(:score) %>점</p>
+              <% if @submission.metrics_result %>
+                <p><strong>영역별:</strong> <%= @submission.metrics_result.domain_scores_json&.to_json %></p>
+              <% end %>
+            </div>
+          <% end %>
+        </div>
+      </div>
+    <% end %>
+  </div>
+
+  <!-- 교사 편집 패널 -->
+  <div class="feedback-panel <%= @teacher_feedback.status != 'approved' ? 'watermark-overlay' : '' %>">
+    <h3>
+      <span>✏️ 교사 편집</span>
+      <% if @teacher_feedback.status == 'approved' %>
+        <span class="section-badge" style="background: #e8f5e9; color: #2e7d32;">승인 완료</span>
+      <% else %>
+        <span class="section-badge edited">편집 가능</span>
+      <% end %>
+    </h3>
+
+    <% if @teacher_feedback.status == 'approved' %>
+      <!-- 승인된 경우 읽기 전용 -->
+      <% sections.each_with_index do |section, idx| %>
+        <div class="feedback-section" id="teacher-section-<%= idx %>">
+          <div class="feedback-section-header" onclick="toggleSection('teacher-<%= idx %>')">
+            <span>
+              <span class="toggle-icon" id="toggle-teacher-<%= idx %>">▼</span>
+              <%= section[:label] %>
+              <% if has_diff?(@teacher_feedback.diff_json, section[:key]) %>
+                <span class="diff-indicator modified" title="교사 수정됨"></span>
+              <% else %>
+                <span class="diff-indicator original" title="AI 원본"></span>
+              <% end %>
+            </span>
+          </div>
+          <div class="feedback-section-content" id="content-teacher-<%= idx %>">
+            <% value = get_nested_value(@teacher_feedback.content_json || {}, section[:key]) || get_nested_value(@ai_feedback, section[:key]) %>
+            <% if section[:type] == 'text' %>
+              <p><%= value || '(데이터 없음)' %></p>
+            <% else %>
+              <pre style="font-size: 0.85rem; white-space: pre-wrap;"><%= value.is_a?(String) ? value : JSON.pretty_generate(value || {}) %></pre>
+            <% end %>
+          </div>
+        </div>
+      <% end %>
+
+      <!-- 감사 로그 -->
+      <div class="feedback-section">
+        <div class="feedback-section-header" onclick="toggleSection('audit')">
+          <span>
+            <span class="toggle-icon" id="toggle-audit">▼</span>
+            📋 변경 이력
+          </span>
+        </div>
+        <div class="feedback-section-content audit-log" id="content-audit">
+          <% @teacher_feedback.feedback_audits.order(timestamp: :desc).each do |audit| %>
+            <div class="audit-log-item">
+              <strong><%= audit.action == 'approve' ? '승인' : '초안 저장' %></strong>
+              - <%= audit.actor&.name %>
+              (<%= audit.timestamp.strftime("%Y-%m-%d %H:%M") %>)
+            </div>
+          <% end %>
+        </div>
+      </div>
+
+    <% else %>
+      <!-- 편집 모드 -->
+      <%= form_with url: teacher_submission_feedback_path(@submission), method: :patch, local: true, id: "feedback-form" do |f| %>
+        <% teacher_content = @teacher_feedback.content_json || {} %>
+
+        <% sections.each_with_index do |section, idx| %>
+          <div class="feedback-section" id="teacher-section-<%= idx %>">
+            <div class="feedback-section-header" onclick="toggleSection('teacher-<%= idx %>')">
+              <span>
+                <span class="toggle-icon" id="toggle-teacher-<%= idx %>">▼</span>
+                <%= section[:label] %>
+                <button type="button" class="annotation-btn" onclick="event.stopPropagation(); addAnnotation('teacher-<%= idx %>')">+ 주석</button>
+              </span>
+            </div>
+            <div class="feedback-section-content" id="content-teacher-<%= idx %>">
+              <% ai_value = get_nested_value(@ai_feedback, section[:key]) %>
+              <% teacher_value = get_nested_value(teacher_content, section[:key]) %>
+              <% current_value = teacher_value || ai_value %>
+
+              <% if section[:type] == 'text' %>
+                <div
+                  class="editable-content"
+                  contenteditable="true"
+                  data-section="<%= section[:key] %>"
+                  data-type="text"
+                ><%= current_value || '' %></div>
+              <% else %>
+                <div
+                  class="editable-content"
+                  contenteditable="true"
+                  data-section="<%= section[:key] %>"
+                  data-type="json"
+                  style="font-family: monospace; font-size: 0.85rem;"
+                ><%= current_value.is_a?(String) ? current_value : JSON.pretty_generate(current_value || {}) %></div>
+              <% end %>
+
+              <!-- 주석 영역 -->
+              <div id="annotations-teacher-<%= idx %>" class="annotations-container">
+                <% annotations = get_annotations(teacher_content, section[:key]) %>
+                <% annotations.each_with_index do |note, note_idx| %>
+                  <div class="annotation-note">
+                    <textarea data-annotation="<%= section[:key] %>" data-idx="<%= note_idx %>"><%= note %></textarea>
+                    <button type="button" onclick="removeAnnotation(this)" style="font-size: 0.7rem;">삭제</button>
+                  </div>
+                <% end %>
+              </div>
+            </div>
+          </div>
+        <% end %>
+
+        <%= f.hidden_field :content_json, id: "content-json-field" %>
+
+        <div style="margin-top: 20px; display: flex; gap: 10px;">
+          <%= f.submit "초안 저장", class: "btn btn-primary", onclick: "prepareSubmit()" %>
+          <button type="button" class="btn btn-secondary" onclick="resetToAI()">AI 원본으로 복원</button>
+        </div>
+      <% end %>
+    <% end %>
+  </div>
+</div>
+
+<script>
+function toggleSection(id) {
+  const content = document.getElementById('content-' + id);
+  const toggle = document.getElementById('toggle-' + id);
+  if (content.classList.contains('collapsed')) {
+    content.classList.remove('collapsed');
+    toggle.classList.remove('collapsed');
+  } else {
+    content.classList.add('collapsed');
+    toggle.classList.add('collapsed');
+  }
+}
+
+function addAnnotation(sectionId) {
+  const container = document.getElementById('annotations-' + sectionId);
+  const note = document.createElement('div');
+  note.className = 'annotation-note';
+  note.innerHTML = `
+    <textarea placeholder="주석을 입력하세요..."></textarea>
+    <button type="button" onclick="removeAnnotation(this)" style="font-size: 0.7rem;">삭제</button>
+  `;
+  container.appendChild(note);
+}
+
+function removeAnnotation(btn) {
+  btn.parentElement.remove();
+}
+
+function prepareSubmit() {
+  const content = {};
+  const editables = document.querySelectorAll('.editable-content');
+
+  editables.forEach(el => {
+    const sectionKey = el.dataset.section;
+    const type = el.dataset.type;
+    let value;
+
+    if (type === 'json') {
+      try {
+        value = JSON.parse(el.innerText);
+      } catch (e) {
+        value = el.innerText;
+      }
+    } else {
+      value = el.innerText;
+    }
+
+    setNestedValue(content, sectionKey, value);
+  });
+
+  // 주석 수집
+  content._annotations = {};
+  document.querySelectorAll('.annotation-note textarea').forEach(textarea => {
+    const key = textarea.dataset.annotation || 'general';
+    if (!content._annotations[key]) {
+      content._annotations[key] = [];
+    }
+    if (textarea.value.trim()) {
+      content._annotations[key].push(textarea.value.trim());
+    }
+  });
+
+  document.getElementById('content-json-field').value = JSON.stringify(content);
+}
+
+function setNestedValue(obj, path, value) {
+  const keys = path.split('.');
+  let current = obj;
+
+  for (let i = 0; i < keys.length - 1; i++) {
+    if (!current[keys[i]]) {
+      current[keys[i]] = {};
+    }
+    current = current[keys[i]];
+  }
+  current[keys[keys.length - 1]] = value;
+}
+
+function resetToAI() {
+  if (!confirm('모든 편집 내용이 AI 원본으로 복원됩니다. 계속하시겠습니까?')) return;
+
+  const aiData = <%= raw (@ai_feedback || {}).to_json %>;
+  const editables = document.querySelectorAll('.editable-content');
+
+  editables.forEach(el => {
+    const sectionKey = el.dataset.section;
+    const type = el.dataset.type;
+    const value = getNestedValue(aiData, sectionKey);
+
+    if (type === 'json') {
+      el.innerText = JSON.stringify(value || {}, null, 2);
+    } else {
+      el.innerText = value || '';
+    }
+  });
+}
+
+function getNestedValue(obj, path) {
+  return path.split('.').reduce((current, key) => current && current[key], obj);
+}
+
+// 섹션 네비게이션
+document.querySelectorAll('.section-nav-btn').forEach(btn => {
+  btn.addEventListener('click', function() {
+    const sectionId = this.dataset.section;
+    const aiSection = document.getElementById('ai-' + sectionId);
+    const teacherSection = document.getElementById('teacher-' + sectionId);
+
+    if (aiSection) aiSection.scrollIntoView({ behavior: 'smooth', block: 'start' });
+
+    // 활성 버튼 표시
+    document.querySelectorAll('.section-nav-btn').forEach(b => b.classList.remove('active'));
+    this.classList.add('active');
+  });
+});
+</script>

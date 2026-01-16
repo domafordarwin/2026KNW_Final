@@ -1,0 +1,47 @@
+<div class="admin-header">
+  <h2>평가 버전</h2>
+  <%= link_to "새 버전", new_admin_assessment_version_path, class: "btn btn-primary" %>
+</div>
+
+<div class="card">
+  <table>
+    <thead>
+      <tr>
+        <th>ID</th>
+        <th>이름</th>
+        <th>상태</th>
+        <th>문항 수</th>
+        <th>배포일</th>
+        <th>작업</th>
+      </tr>
+    </thead>
+    <tbody>
+      <% @assessment_versions.each do |version| %>
+        <tr>
+          <td><%= version.id %></td>
+          <td><%= link_to version.name, admin_assessment_version_path(version) %></td>
+          <td>
+            <% if version.status == "published" %>
+              <span class="badge badge-success">배포됨</span>
+            <% else %>
+              <span class="badge badge-warning">초안</span>
+            <% end %>
+          </td>
+          <td><%= version.assessment_version_items.count %></td>
+          <td><%= version.published_at&.strftime("%Y-%m-%d %H:%M") || "-" %></td>
+          <td class="actions">
+            <%= link_to "보기", admin_assessment_version_path(version), class: "btn btn-sm btn-secondary" %>
+            <% if version.status != "published" %>
+              <%= link_to "수정", edit_admin_assessment_version_path(version), class: "btn btn-sm btn-secondary" %>
+              <%= link_to "삭제", admin_assessment_version_path(version), method: :delete, data: { confirm: "정말 삭제하시겠습니까?" }, class: "btn btn-sm btn-danger" %>
+            <% end %>
+          </td>
+        </tr>
+      <% end %>
+    </tbody>
+  </table>
+
+  <% if @assessment_versions.empty? %>
+    <p style="padding: 20px; text-align: center; color: #666;">평가 버전이 없습니다.</p>
+  <% end %>
+</div>

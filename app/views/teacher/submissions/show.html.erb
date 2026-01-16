@@ -1,0 +1,53 @@
+<div class="header">
+  <h2>제출물 #<%= @submission.id %></h2>
+  <div class="actions">
+    <%= link_to "피드백", teacher_submission_feedback_path(@submission), class: "btn btn-primary" %>
+    <%= link_to "목록으로", teacher_submissions_path, class: "btn btn-secondary" %>
+  </div>
+</div>
+
+<div class="card">
+  <h3>상세 정보</h3>
+  <table>
+    <tr><th style="width:150px;">학생</th><td><%= @submission.student&.name %></td></tr>
+    <tr><th>세션</th><td><%= @submission.session&.assessment_version&.name %></td></tr>
+    <tr><th>상태</th><td><span class="badge badge-<%= @submission.status == 'submitted' ? 'success' : 'warning' %>"><%= @submission.status %></span></td></tr>
+    <tr><th>시작 시간</th><td><%= @submission.started_at&.strftime("%Y-%m-%d %H:%M") %></td></tr>
+    <tr><th>제출 시간</th><td><%= @submission.submitted_at&.strftime("%Y-%m-%d %H:%M") || "-" %></td></tr>
+  </table>
+</div>
+
+<div class="card">
+  <h3>응답 (<%= @responses.count %>)</h3>
+  <table>
+    <thead>
+      <tr>
+        <th>문항</th>
+        <th>유형</th>
+        <th>답변</th>
+        <th>점수</th>
+        <th>정답 여부</th>
+      </tr>
+    </thead>
+    <tbody>
+      <% @responses.each do |resp| %>
+        <% scoring = @scoring_results[resp.item_id] %>
+        <tr>
+          <td>#<%= resp.item_id %></td>
+          <td><%= resp.item&.item_type %></td>
+          <td><code><%= (resp.answer_json.is_a?(Hash) ? resp.answer_json.to_json : resp.answer_json.to_s).truncate(50) %></code></td>
+          <td><%= scoring&.score || "-" %></td>
+          <td>
+            <% if scoring %>
+              <span class="badge badge-<%= scoring.is_correct ? 'success' : 'warning' %>">
+                <%= scoring.is_correct ? '예' : '아니오' %>
+              </span>
+            <% else %>
+              -
+            <% end %>
+          </td>
+        </tr>
+      <% end %>
+    </tbody>
+  </table>
+</div>

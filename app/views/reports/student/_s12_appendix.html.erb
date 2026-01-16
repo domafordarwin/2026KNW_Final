@@ -1,5 +1,7 @@
 <section class="report-section">
-  <h2>S-12 Appendix</h2>
-  <p>Assessment version: <%= @presenter.assessment_version&.id %></p>
-  <p>Report version: <%= @presenter.report.version %></p>
+  <h2>부록</h2>
+  <table class="report-table">
+    <tr><th style="width:150px;">검사 버전 ID</th><td><%= @presenter.assessment_version&.id %></td></tr>
+    <tr><th>보고서 버전</th><td><%= @presenter.report.version %></td></tr>
+  </table>
 </section>

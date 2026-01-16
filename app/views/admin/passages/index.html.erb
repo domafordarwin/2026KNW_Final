@@ -1,0 +1,46 @@
+<div class="admin-header">
+  <h2>지문</h2>
+  <%= link_to "새 지문", new_admin_passage_path, class: "btn btn-primary" %>
+</div>
+
+<div class="card">
+  <div class="filters">
+    <%= form_with url: admin_passages_path, method: :get, local: true, style: "display: flex; gap: 10px; flex-wrap: wrap;" do %>
+      <%= text_field_tag :q, params[:q], placeholder: "제목 검색..." %>
+      <%= select_tag :grade_band, options_for_select([["전체 학년군", ""], "K-2", "3-5", "6-8", "9-12"], params[:grade_band]) %>
+      <%= submit_tag "필터", class: "btn btn-secondary" %>
+    <% end %>
+  </div>
+
+  <table>
+    <thead>
+      <tr>
+        <th>ID</th>
+        <th>제목</th>
+        <th>학년군</th>
+        <th>문항 수</th>
+        <th>생성일</th>
+        <th>작업</th>
+      </tr>
+    </thead>
+    <tbody>
+      <% @passages.each do |passage| %>
+        <tr>
+          <td><%= passage.id %></td>
+          <td><%= link_to passage.title, admin_passage_path(passage) %></td>
+          <td><%= passage.grade_band %></td>
+          <td><%= passage.items.count %></td>
+          <td><%= passage.created_at.strftime("%Y-%m-%d") %></td>
+          <td class="actions">
+            <%= link_to "수정", edit_admin_passage_path(passage), class: "btn btn-sm btn-secondary" %>
+            <%= link_to "삭제", admin_passage_path(passage), method: :delete, data: { confirm: "정말 삭제하시겠습니까?" }, class: "btn btn-sm btn-danger" %>
+          </td>
+        </tr>
+      <% end %>
+    </tbody>
+  </table>
+
+  <% if @passages.empty? %>
+    <p style="padding: 20px; text-align: center; color: #666;">지문이 없습니다.</p>
+  <% end %>
+</div>

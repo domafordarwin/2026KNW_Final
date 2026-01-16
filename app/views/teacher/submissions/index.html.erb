@@ -1,0 +1,33 @@
+<div class="header">
+  <h2>제출물</h2>
+</div>
+
+<div class="card">
+  <table>
+    <thead>
+      <tr>
+        <th>ID</th>
+        <th>학생</th>
+        <th>세션</th>
+        <th>상태</th>
+        <th>제출일</th>
+        <th>작업</th>
+      </tr>
+    </thead>
+    <tbody>
+      <% @submissions.each do |sub| %>
+        <tr>
+          <td><%= sub.id %></td>
+          <td><%= sub.student&.name %></td>
+          <td><%= sub.session&.assessment_version&.name %></td>
+          <td><span class="badge badge-<%= sub.status == 'submitted' ? 'success' : 'warning' %>"><%= sub.status %></span></td>
+          <td><%= sub.submitted_at&.strftime("%Y-%m-%d %H:%M") || "-" %></td>
+          <td class="actions">
+            <%= link_to "검토", teacher_submission_path(sub), class: "btn btn-sm btn-primary" %>
+            <%= link_to "피드백", teacher_submission_feedback_path(sub), class: "btn btn-sm btn-secondary" %>
+          </td>
+        </tr>
+      <% end %>
+    </tbody>
+  </table>
+</div>

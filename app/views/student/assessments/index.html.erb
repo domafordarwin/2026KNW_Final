@@ -1,0 +1,36 @@
+<h2>나의 평가</h2>
+
+<div class="card" style="margin-top: 20px;">
+  <h3>응시 가능한 평가</h3>
+  <table>
+    <thead>
+      <tr>
+        <th>평가</th>
+        <th>상태</th>
+        <th>작업</th>
+      </tr>
+    </thead>
+    <tbody>
+      <% @active_sessions.each do |session| %>
+        <% my_sub = @my_submissions.find { |s| s.session_id == session.id } %>
+        <tr>
+          <td><%= session.assessment_version&.name %></td>
+          <td>
+            <% if my_sub %>
+              <span class="badge badge-<%= my_sub.status == 'submitted' ? 'success' : 'warning' %>"><%= my_sub.status %></span>
+            <% else %>
+              <span class="badge">시작 전</span>
+            <% end %>
+          </td>
+          <td>
+            <% if my_sub&.status == "submitted" %>
+              <span style="color: #666;">완료</span>
+            <% else %>
+              <%= link_to my_sub ? "계속하기" : "시작하기", take_student_assessment_path(session), class: "btn btn-primary" %>
+            <% end %>
+          </td>
+        </tr>
+      <% end %>
+    </tbody>
+  </table>
+</div>

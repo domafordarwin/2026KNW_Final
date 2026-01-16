@@ -1,0 +1,28 @@
+<div class="admin-header">
+  <h2><%= @book.title %></h2>
+  <div class="actions">
+    <%= link_to "수정", edit_admin_book_catalog_path(@book), class: "btn btn-secondary" %>
+    <%= link_to "목록으로", admin_book_catalogs_path, class: "btn btn-secondary" %>
+  </div>
+</div>
+
+<div class="card">
+  <table>
+    <tr><th style="width: 150px;">제목</th><td><%= @book.title %></td></tr>
+    <tr><th>저자</th><td><%= @book.author || "N/A" %></td></tr>
+    <tr><th>ISBN</th><td><%= @book.isbn || "N/A" %></td></tr>
+    <tr><th>학년군</th><td><%= @book.grade_band || "N/A" %></td></tr>
+    <tr><th>난이도</th><td><%= @book.difficulty || "N/A" %></td></tr>
+    <tr><th>태그</th><td><%= @book.tags_json || "없음" %></td></tr>
+    <tr>
+      <th>상태</th>
+      <td>
+        <% if @book.active? %>
+          <span class="badge badge-success">활성</span>
+        <% else %>
+          <span class="badge badge-warning">비활성</span>
+        <% end %>
+      </td>
+    </tr>
+  </table>
+</div>

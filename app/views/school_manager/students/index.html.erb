@@ -1,0 +1,45 @@
+<div class="header">
+  <h2>학생 관리</h2>
+  <div class="actions">
+    <%= link_to "학생 추가", new_school_manager_student_path, class: "btn btn-primary" %>
+    <%= link_to "CSV 일괄 등록", import_school_manager_students_path, class: "btn btn-secondary" %>
+  </div>
+</div>
+
+<div class="card">
+  <table>
+    <thead>
+      <tr>
+        <th>ID</th>
+        <th>이름</th>
+        <th>이메일</th>
+        <th>학번</th>
+        <th>상태</th>
+        <th>작업</th>
+      </tr>
+    </thead>
+    <tbody>
+      <% @students.each do |student| %>
+        <tr>
+          <td><%= student.id %></td>
+          <td><%= student.name %></td>
+          <td><%= student.email_optional || "-" %></td>
+          <td><%= student.student_profile&.student_code || "-" %></td>
+          <td>
+            <span class="badge badge-<%= student.status == 'active' ? 'success' : 'warning' %>">
+              <%= student.status == 'active' ? '활성' : '비활성' %>
+            </span>
+          </td>
+          <td class="actions">
+            <%= link_to "수정", edit_school_manager_student_path(student), class: "btn btn-sm btn-secondary" %>
+            <%= link_to "삭제", school_manager_student_path(student), method: :delete, data: { confirm: "정말 삭제하시겠습니까?" }, class: "btn btn-sm btn-danger" %>
+          </td>
+        </tr>
+      <% end %>
+    </tbody>
+  </table>
+
+  <% if @students.empty? %>
+    <p style="padding: 20px; text-align: center; color: #666;">등록된 학생이 없습니다.</p>
+  <% end %>
+</div>

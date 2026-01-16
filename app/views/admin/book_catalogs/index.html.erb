@@ -1,0 +1,57 @@
+<div class="admin-header">
+  <h2>도서 목록 (허용 목록)</h2>
+  <%= link_to "도서 추가", new_admin_book_catalog_path, class: "btn btn-primary" %>
+</div>
+
+<div class="card">
+  <div class="filters">
+    <%= form_with url: admin_book_catalogs_path, method: :get, local: true, style: "display: flex; gap: 10px; flex-wrap: wrap;" do %>
+      <%= text_field_tag :q, params[:q], placeholder: "제목 검색..." %>
+      <%= select_tag :grade_band, options_for_select([["전체 학년군", ""], "K-2", "3-5", "6-8", "9-12"], params[:grade_band]) %>
+      <%= select_tag :active, options_for_select([["전체 상태", ""], ["활성", "true"], ["비활성", "false"]], params[:active]) %>
+      <%= submit_tag "필터", class: "btn btn-secondary" %>
+    <% end %>
+  </div>
+
+  <table>
+    <thead>
+      <tr>
+        <th>ID</th>
+        <th>제목</th>
+        <th>저자</th>
+        <th>ISBN</th>
+        <th>학년군</th>
+        <th>난이도</th>
+        <th>상태</th>
+        <th>작업</th>
+      </tr>
+    </thead>
+    <tbody>
+      <% @books.each do |book| %>
+        <tr>
+          <td><%= book.id %></td>
+          <td><%= book.title %></td>
+          <td><%= book.author %></td>
+          <td><%= book.isbn %></td>
+          <td><%= book.grade_band %></td>
+          <td><%= book.difficulty %></td>
+          <td>
+            <% if book.active? %>
+              <span class="badge badge-success">활성</span>
+            <% else %>
+              <span class="badge badge-warning">비활성</span>
+            <% end %>
+          </td>
+          <td class="actions">
+            <%= link_to "수정", edit_admin_book_catalog_path(book), class: "btn btn-sm btn-secondary" %>
+            <%= link_to "삭제", admin_book_catalog_path(book), method: :delete, data: { confirm: "정말 삭제하시겠습니까?" }, class: "btn btn-sm btn-danger" %>
+          </td>
+        </tr>
+      <% end %>
+    </tbody>
+  </table>
+
+  <% if @books.empty? %>
+    <p style="padding: 20px; text-align: center; color: #666;">도서 목록이 비어있습니다.</p>
+  <% end %>
+</div>

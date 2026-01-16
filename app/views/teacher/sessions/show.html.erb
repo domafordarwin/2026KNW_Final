@@ -1,0 +1,49 @@
+<div class="header">
+  <h2>세션: <%= @session.assessment_version&.name %></h2>
+  <div class="actions">
+    <% if @session.status == "draft" %>
+      <%= link_to "배포", distribute_teacher_session_path(@session), method: :post, class: "btn btn-success" %>
+    <% end %>
+    <%= link_to "목록으로", teacher_sessions_path, class: "btn btn-secondary" %>
+  </div>
+</div>
+
+<div class="card">
+  <h3>세션 상세</h3>
+  <table>
+    <tr><th style="width:150px;">상태</th><td><span class="badge badge-<%= @session.status == 'active' ? 'success' : 'warning' %>"><%= @session.status %></span></td></tr>
+    <tr><th>접속 코드</th><td><code style="font-size: 1.2rem; background: #f0f0f0; padding: 5px 10px;"><%= @session.access_code %></code></td></tr>
+    <tr><th>학교</th><td><%= @session.school&.name %></td></tr>
+    <tr><th>학급</th><td><%= @session.school_class&.name %></td></tr>
+    <tr><th>시작일</th><td><%= @session.start_at&.strftime("%Y-%m-%d %H:%M") || "설정 안 됨" %></td></tr>
+    <tr><th>종료일</th><td><%= @session.end_at&.strftime("%Y-%m-%d %H:%M") || "설정 안 됨" %></td></tr>
+  </table>
+</div>
+
+<div class="card">
+  <h3>제출물 (<%= @submissions.count %>)</h3>
+  <table>
+    <thead>
+      <tr>
+        <th>학생</th>
+        <th>상태</th>
+        <th>시작</th>
+        <th>제출</th>
+        <th>작업</th>
+      </tr>
+    </thead>
+    <tbody>
+      <% @submissions.each do |sub| %>
+        <tr>
+          <td><%= sub.student&.name %></td>
+          <td><span class="badge badge-<%= sub.status == 'submitted' ? 'success' : 'warning' %>"><%= sub.status %></span></td>
+          <td><%= sub.started_at&.strftime("%H:%M") %></td>
+          <td><%= sub.submitted_at&.strftime("%H:%M") || "-" %></td>
+          <td>
+            <%= link_to "검토", teacher_submission_path(sub), class: "btn btn-sm btn-primary" %>
+          </td>
+        </tr>
+      <% end %>
+    </tbody>
+  </table>
+</div>

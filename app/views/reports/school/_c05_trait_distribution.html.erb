@@ -1,18 +1,18 @@
 <section class="report-section">
-  <h2>C-05 Trait Distribution</h2>
+  <h2>독자 성향 분포</h2>
   <table class="report-table">
     <thead>
       <tr>
-        <th>Trait</th>
-        <th>Ratio</th>
-        <th>Chart</th>
+        <th>성향 유형</th>
+        <th>비율</th>
+        <th>그래프</th>
       </tr>
     </thead>
     <tbody>
       <% @presenter.trait_aggs.each do |agg| %>
         <tr>
           <td><%= agg.trait_type %></td>
-          <td><%= agg.ratio %></td>
+          <td><%= (agg.ratio * 100).round(1) %>%</td>
           <td><%= report_bar(agg.ratio * 100) %></td>
         </tr>
       <% end %>

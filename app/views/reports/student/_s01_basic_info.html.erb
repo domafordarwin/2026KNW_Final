@@ -1,9 +1,9 @@
 <section class="report-section">
-  <h2>S-01 Cover / Basic Info</h2>
-  <p>
-    Student: <%= display_student_name(@presenter.student, @audience) %><br>
-    School: <%= @presenter.school&.name %><br>
-    Class: <%= @presenter.school_class&.name %> (Grade <%= @presenter.school_class&.grade %>)<br>
-    Session: <%= @presenter.session&.id %>
-  </p>
+  <h2>기본 정보</h2>
+  <table class="report-table">
+    <tr><th style="width:120px;">학생명</th><td><%= display_student_name(@presenter.student, @audience) %></td></tr>
+    <tr><th>학교</th><td><%= @presenter.school&.name %></td></tr>
+    <tr><th>학급</th><td><%= @presenter.school_class&.name %> (<%= @presenter.school_class&.grade %>학년)</td></tr>
+    <tr><th>검사 회차</th><td><%= @presenter.session&.id %></td></tr>
+  </table>
 </section>

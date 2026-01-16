@@ -1,0 +1,24 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(curl:*)",
+      "Bash(cat:*)",
+      "Bash(bundle exec rails db:migrate:*)",
+      "Bash(bundle exec rails db:migrate:status:*)",
+      "Bash(bundle exec rails routes:*)",
+      "Bash(bundle exec rails db:seed:*)",
+      "Bash(bundle install:*)",
+      "Bash(pkill:*)",
+      "Bash(bundle exec ruby:*)",
+      "Bash(rails db:migrate:status:*)",
+      "Bash(rails runner \"puts User.pluck\\(:id, :name, :email_optional, :role\\).map{|r| r.join\\('' | ''\\)}.join\\(''\\\\n''\\)\")",
+      "Bash(rails test:*)",
+      "Bash(RAILS_ENV=test rails db:migrate:*)",
+      "Bash(rails runner:*)",
+      "Bash(bin/rails test:*)",
+      "Bash(bundle lock:*)",
+      "Bash(git add:*)",
+      "Bash(git commit:*)"
+    ]
+  }
+}

@@ -1,0 +1,38 @@
+<div class="header">
+  <h2>평가 세션</h2>
+  <%= link_to "새 세션", new_teacher_session_path, class: "btn btn-primary" %>
+</div>
+
+<div class="card">
+  <table>
+    <thead>
+      <tr>
+        <th>ID</th>
+        <th>평가</th>
+        <th>학교</th>
+        <th>상태</th>
+        <th>접속 코드</th>
+        <th>제출수</th>
+        <th>작업</th>
+      </tr>
+    </thead>
+    <tbody>
+      <% @sessions.each do |session| %>
+        <tr>
+          <td><%= session.id %></td>
+          <td><%= session.assessment_version&.name %></td>
+          <td><%= session.school&.name %></td>
+          <td><span class="badge badge-<%= session.status == 'active' ? 'success' : 'warning' %>"><%= session.status %></span></td>
+          <td><code><%= session.access_code %></code></td>
+          <td><%= session.submissions.count %></td>
+          <td class="actions">
+            <%= link_to "보기", teacher_session_path(session), class: "btn btn-sm btn-secondary" %>
+            <% if session.status == "draft" %>
+              <%= link_to "배포", distribute_teacher_session_path(session), method: :post, class: "btn btn-sm btn-success" %>
+            <% end %>
+          </td>
+        </tr>
+      <% end %>
+    </tbody>
+  </table>
+</div>

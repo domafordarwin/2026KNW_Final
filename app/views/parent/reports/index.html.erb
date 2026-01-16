@@ -1,0 +1,30 @@
+<h2>자녀 보고서</h2>
+
+<div class="card" style="margin-top: 20px;">
+  <% if @reports.any? %>
+    <table>
+      <thead>
+        <tr>
+          <th>자녀</th>
+          <th>평가</th>
+          <th>날짜</th>
+          <th>작업</th>
+        </tr>
+      </thead>
+      <tbody>
+        <% @reports.each do |report| %>
+          <tr>
+            <td><%= report.submission&.student&.name %></td>
+            <td><%= report.submission&.session&.assessment_version&.name %></td>
+            <td><%= report.created_at.strftime("%Y-%m-%d") %></td>
+            <td>
+              <%= link_to "보고서 보기", report_path(report), class: "btn btn-primary" %>
+            </td>
+          </tr>
+        <% end %>
+      </tbody>
+    </table>
+  <% else %>
+    <p style="padding: 20px; color: #666;">아직 열람 가능한 보고서가 없습니다.</p>
+  <% end %>
+</div>

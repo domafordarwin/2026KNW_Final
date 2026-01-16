@@ -1,0 +1,36 @@
+<%= form_with model: [:admin, @passage], local: true do |f| %>
+  <% if @passage.errors.any? %>
+    <div class="alert alert-error">
+      <ul>
+        <% @passage.errors.full_messages.each do |msg| %>
+          <li><%= msg %></li>
+        <% end %>
+      </ul>
+    </div>
+  <% end %>
+
+  <div class="form-group">
+    <%= f.label :title, "제목" %>
+    <%= f.text_field :title, required: true %>
+  </div>
+
+  <div class="form-group">
+    <%= f.label :grade_band, "학년군" %>
+    <%= f.select :grade_band, options_for_select([["학년군 선택", ""], "K-2", "3-5", "6-8", "9-12"], @passage.grade_band), {} %>
+  </div>
+
+  <div class="form-group">
+    <%= f.label :text, "본문" %>
+    <%= f.text_area :text, rows: 10, required: true %>
+  </div>
+
+  <div class="form-group">
+    <%= f.label :tags_json, "태그 (JSON 배열)" %>
+    <%= f.text_field :tags_json, placeholder: '["reading", "comprehension"]' %>
+  </div>
+
+  <div class="actions">
+    <%= f.submit class: "btn btn-primary" %>
+    <%= link_to "취소", admin_passages_path, class: "btn btn-secondary" %>
+  </div>
+<% end %>

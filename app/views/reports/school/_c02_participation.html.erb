@@ -1,8 +1,8 @@
 <section class="report-section">
-  <h2>C-02 Participation</h2>
-  <p>
-    Total: <%= @presenter.participation_stats[:total] %><br>
-    Submitted: <%= @presenter.participation_stats[:submitted] %><br>
-    Rate: <%= @presenter.participation_stats[:submission_rate] %>%
-  </p>
+  <h2>참여 현황</h2>
+  <table class="report-table">
+    <tr><th style="width:150px;">전체 학생 수</th><td><%= @presenter.participation_stats[:total] %>명</td></tr>
+    <tr><th>검사 완료</th><td><%= @presenter.participation_stats[:submitted] %>명</td></tr>
+    <tr><th>참여율</th><td><%= @presenter.participation_stats[:submission_rate] %>%</td></tr>
+  </table>
 </section>

@@ -1,10 +1,54 @@
 <!DOCTYPE html>
-<html>
+<html lang="ko">
   <head>
-    <title>Report</title>
+    <title>문해력 진단 보고서</title>
+    <meta charset="UTF-8">
     <%= csrf_meta_tags %>
     <%= csp_meta_tag %>
     <%= stylesheet_link_tag "application", "data-turbo-track": "reload" %>
+    <style>
+      @media print {
+        .report-page-break { page-break-before: always; }
+        .no-print { display: none !important; }
+      }
+      body.report-layout {
+        font-family: 'Noto Sans KR', -apple-system, BlinkMacSystemFont, sans-serif;
+        background: #fff;
+        color: #333;
+        line-height: 1.6;
+      }
+      .report-container {
+        max-width: 800px;
+        margin: 0 auto;
+        padding: 40px;
+      }
+      .report-section {
+        margin-bottom: 30px;
+        padding: 20px;
+        background: #fafafa;
+        border-radius: 8px;
+      }
+      .report-section h2 {
+        color: #1a1a2e;
+        border-bottom: 2px solid #667eea;
+        padding-bottom: 10px;
+        margin-bottom: 15px;
+      }
+      .report-table {
+        width: 100%;
+        border-collapse: collapse;
+        margin: 15px 0;
+      }
+      .report-table th, .report-table td {
+        padding: 10px;
+        text-align: left;
+        border-bottom: 1px solid #ddd;
+      }
+      .report-table th {
+        background: #f0f0f0;
+        font-weight: 600;
+      }
+    </style>
   </head>
   <body class="report-layout">
     <main class="report-container">

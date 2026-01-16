@@ -1,0 +1,83 @@
+<div class="header">
+  <h2>보고서 관리</h2>
+</div>
+
+<div class="card">
+  <h3>생성된 보고서</h3>
+  <table>
+    <thead>
+      <tr>
+        <th>ID</th>
+        <th>학생</th>
+        <th>평가</th>
+        <th>상태</th>
+        <th>버전</th>
+        <th>생성일</th>
+        <th>작업</th>
+      </tr>
+    </thead>
+    <tbody>
+      <% @reports.each do |report| %>
+        <tr>
+          <td><%= report.id %></td>
+          <td><%= report.submission&.student&.name %></td>
+          <td><%= report.submission&.session&.assessment_version&.name %></td>
+          <td>
+            <span class="badge badge-<%= report.status == 'generated' ? 'success' : 'warning' %>">
+              <%= report.status == 'generated' ? '생성됨' : report.status %>
+            </span>
+          </td>
+          <td><%= report.version %></td>
+          <td><%= report.created_at.strftime("%Y-%m-%d %H:%M") %></td>
+          <td class="actions">
+            <%= link_to "미리보기", report_path(report), class: "btn btn-sm btn-primary" %>
+            <%= link_to "PDF 다운로드", download_teacher_report_path(report), class: "btn btn-sm btn-success" %>
+            <%= link_to "공유 링크", share_teacher_report_path(report), method: :post, class: "btn btn-sm btn-secondary" %>
+          </td>
+        </tr>
+      <% end %>
+    </tbody>
+  </table>
+
+  <% if @reports.empty? %>
+    <p style="padding: 20px; text-align: center; color: #666;">생성된 보고서가 없습니다.</p>
+  <% end %>
+</div>
+
+<div class="card">
+  <h3>보고서 생성</h3>
+  <p>제출 완료된 학생의 보고서를 생성합니다.</p>
+
+  <% pending_submissions = Submission.where(status: "submitted").includes(:student, session: :assessment_version) %>
+  <% if pending_submissions.any? %>
+    <table>
+      <thead>
+        <tr>
+          <th>학생</th>
+          <th>평가</th>
+          <th>제출일</th>
+          <th>작업</th>
+        </tr>
+      </thead>
+      <tbody>
+        <% pending_submissions.each do |sub| %>
+          <% existing_report = Report.find_by(submission: sub, scope: "student") %>
+          <tr>
+            <td><%= sub.student&.name %></td>
+            <td><%= sub.session&.assessment_version&.name %></td>
+            <td><%= sub.submitted_at&.strftime("%Y-%m-%d %H:%M") %></td>
+            <td>
+              <% if existing_report %>
+                <%= link_to "재생성", generate_teacher_report_path(existing_report, submission_id: sub.id), method: :post, class: "btn btn-sm btn-warning", data: { confirm: "기존 보고서를 재생성하시겠습니까?" } %>
+              <% else %>
+                <%= button_to "보고서 생성", generate_teacher_report_path(0, submission_id: sub.id), method: :post, class: "btn btn-sm btn-primary" %>
+              <% end %>
+            </td>
+          </tr>
+        <% end %>
+      </tbody>
+    </table>
+  <% else %>
+    <p style="padding: 20px; text-align: center; color: #666;">보고서 생성 대기 중인 제출물이 없습니다.</p>
+  <% end %>
+</div>

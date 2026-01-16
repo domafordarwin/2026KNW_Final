@@ -1,9 +1,10 @@
 <section class="report-section report-page-break">
-  <h2>S-10 Book Guidance</h2>
+  <h2>추천 도서 및 독서 활동</h2>
   <p><%= @presenter.book_guidance_text %></p>
+  <h3>추천 도서 목록</h3>
   <ul>
     <% @presenter.selected_books.each do |book| %>
-      <li><%= book.title %> - <%= book.author %></li>
+      <li><strong><%= book.title %></strong> - <%= book.author %></li>
     <% end %>
   </ul>
   <pre><%= JSON.pretty_generate(@presenter.book_guidance&.guidance_json || {}) %></pre>

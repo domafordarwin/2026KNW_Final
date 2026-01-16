@@ -1,0 +1,53 @@
+<h2>환영합니다, <%= current_user.name %>님!</h2>
+
+<div class="card" style="margin-top: 20px;">
+  <h3>응시 가능한 평가</h3>
+  <% if @active_sessions.any? %>
+    <table>
+      <thead>
+        <tr>
+          <th>평가</th>
+          <th>작업</th>
+        </tr>
+      </thead>
+      <tbody>
+        <% @active_sessions.each do |session| %>
+          <tr>
+            <td><%= session.assessment_version&.name %></td>
+            <td>
+              <%= link_to "시작하기", take_student_assessment_path(session), class: "btn btn-primary" %>
+            </td>
+          </tr>
+        <% end %>
+      </tbody>
+    </table>
+  <% else %>
+    <p style="padding: 20px; color: #666;">현재 응시 가능한 평가가 없습니다.</p>
+  <% end %>
+</div>
+
+<div class="card">
+  <h3>나의 최근 제출물</h3>
+  <% if @my_submissions.any? %>
+    <table>
+      <thead>
+        <tr>
+          <th>평가</th>
+          <th>상태</th>
+          <th>제출일</th>
+        </tr>
+      </thead>
+      <tbody>
+        <% @my_submissions.each do |sub| %>
+          <tr>
+            <td><%= sub.session&.assessment_version&.name %></td>
+            <td><span class="badge badge-<%= sub.status == 'submitted' ? 'success' : 'warning' %>"><%= sub.status %></span></td>
+            <td><%= sub.submitted_at&.strftime("%Y-%m-%d %H:%M") || "-" %></td>
+          </tr>
+        <% end %>
+      </tbody>
+    </table>
+  <% else %>
+    <p style="padding: 20px; color: #666;">아직 제출물이 없습니다.</p>
+  <% end %>
+</div>

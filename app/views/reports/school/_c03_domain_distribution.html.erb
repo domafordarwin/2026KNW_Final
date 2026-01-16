@@ -1,19 +1,19 @@
 <section class="report-section report-page-break">
-  <h2>C-03 Domain Distribution</h2>
+  <h2>영역별 점수 분포</h2>
   <table class="report-table">
     <thead>
       <tr>
-        <th>Domain</th>
-        <th>Average</th>
-        <th>Std</th>
-        <th>Chart</th>
+        <th>영역</th>
+        <th>평균</th>
+        <th>표준편차</th>
+        <th>그래프</th>
       </tr>
     </thead>
     <tbody>
       <% @presenter.domain_aggs.each do |agg| %>
         <tr>
           <td><%= agg.domain %></td>
-          <td><%= agg.avg %></td>
+          <td><%= agg.avg %>점</td>
           <td><%= agg.std %></td>
           <td><%= report_bar(agg.avg) %></td>
         </tr>

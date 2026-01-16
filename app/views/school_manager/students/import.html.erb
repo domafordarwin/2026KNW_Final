@@ -1,0 +1,29 @@
+<div class="header">
+  <h2>학생 CSV 일괄 등록</h2>
+</div>
+
+<div class="card">
+  <p style="margin-bottom: 20px;">
+    다음 컬럼이 포함된 CSV 파일을 업로드하세요:
+    <code>name, email, password, school_id, class_id, student_code</code>
+  </p>
+
+  <div style="background: #f8f9fa; padding: 15px; border-radius: 4px; margin-bottom: 20px;">
+    <strong>CSV 파일 양식 예시:</strong>
+    <pre style="margin: 10px 0 0 0; font-size: 0.9rem;">name,email,password,school_id,class_id,student_code
+홍길동,hong@example.com,password123,1,1,2024001
+김철수,kim@example.com,password123,1,1,2024002</pre>
+  </div>
+
+  <%= form_with url: import_school_manager_students_path, method: :post, multipart: true, local: true do |f| %>
+    <div class="form-group">
+      <%= f.label :file, "CSV 파일" %>
+      <%= f.file_field :file, accept: ".csv" %>
+    </div>
+
+    <div class="actions">
+      <%= f.submit "업로드", class: "btn btn-primary" %>
+      <%= link_to "취소", school_manager_students_path, class: "btn btn-secondary" %>
+    </div>
+  <% end %>
+</div>

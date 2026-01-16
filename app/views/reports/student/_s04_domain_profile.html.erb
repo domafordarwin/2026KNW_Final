@@ -1,21 +1,21 @@
 <section class="report-section">
-  <h2>S-04 Domain Profile</h2>
+  <h2>영역별 프로파일</h2>
   <p><%= @presenter.domain_profile_text %></p>
   <table class="report-table">
     <thead>
       <tr>
-        <th>Domain</th>
-        <th>Score</th>
-        <th>Percentile</th>
-        <th>Chart</th>
+        <th>영역</th>
+        <th>점수</th>
+        <th>백분위</th>
+        <th>그래프</th>
       </tr>
     </thead>
     <tbody>
       <% @presenter.domain_scores.each do |domain, score| %>
         <tr>
           <td><%= domain %></td>
-          <td><%= score %></td>
-          <td><%= @presenter.domain_percentiles[domain] %></td>
+          <td><%= score %>점</td>
+          <td><%= @presenter.domain_percentiles[domain] %>%</td>
           <td><%= report_bar(score) %></td>
         </tr>
       <% end %>

@@ -1,0 +1,61 @@
+<div class="admin-header">
+  <h2><%= @assessment_version.name %></h2>
+  <div class="actions">
+    <% if @assessment_version.status != "published" %>
+      <%= link_to "수정", edit_admin_assessment_version_path(@assessment_version), class: "btn btn-secondary" %>
+      <%= link_to "배포하기", publish_admin_assessment_version_path(@assessment_version), method: :post, data: { confirm: "배포하면 수정할 수 없습니다. 계속하시겠습니까?" }, class: "btn btn-success" %>
+    <% end %>
+    <%= link_to "목록으로", admin_assessment_versions_path, class: "btn btn-secondary" %>
+  </div>
+</div>
+
+<div class="card">
+  <h3>버전 상세</h3>
+  <table>
+    <tr>
+      <th style="width: 150px;">상태</th>
+      <td>
+        <% if @assessment_version.status == "published" %>
+          <span class="badge badge-success">배포됨</span>
+        <% else %>
+          <span class="badge badge-warning">초안</span>
+        <% end %>
+      </td>
+    </tr>
+    <tr><th>배포일</th><td><%= @assessment_version.published_at&.strftime("%Y-%m-%d %H:%M") || "-" %></td></tr>
+    <tr><th>총 문항 수</th><td><%= @items.count %></td></tr>
+    <tr><th>총 배점</th><td><%= @items.sum(:points) %></td></tr>
+  </table>
+</div>
+
+<div class="card">
+  <h3>이 버전의 문항</h3>
+  <table>
+    <thead>
+      <tr>
+        <th>순서</th>
+        <th>문항 ID</th>
+        <th>지문</th>
+        <th>유형</th>
+        <th>영역</th>
+        <th>배점</th>
+      </tr>
+    </thead>
+    <tbody>
+      <% @assessment_version.assessment_version_items.includes(item: :passage).order(:order_no).each do |avi| %>
+        <tr>
+          <td><%= avi.order_no %></td>
+          <td><%= avi.item.id %></td>
+          <td><%= avi.item.passage&.title&.truncate(30) || "N/A" %></td>
+          <td><span class="badge badge-info"><%= avi.item.item_type %></span></td>
+          <td><%= avi.item.domain %></td>
+          <td><%= avi.item.points %></td>
+        </tr>
+      <% end %>
+    </tbody>
+  </table>
+
+  <% if @items.empty? %>
+    <p style="padding: 20px; text-align: center; color: #666;">문항이 아직 추가되지 않았습니다.</p>
+  <% end %>
+</div>

@@ -1,0 +1,57 @@
+<div class="admin-header">
+  <h2><%= @passage.title %></h2>
+  <div class="actions">
+    <%= link_to "수정", edit_admin_passage_path(@passage), class: "btn btn-secondary" %>
+    <%= link_to "목록으로", admin_passages_path, class: "btn btn-secondary" %>
+  </div>
+</div>
+
+<div class="card">
+  <h3>지문 상세</h3>
+  <p><strong>학년군:</strong> <%= @passage.grade_band || "설정 안 됨" %></p>
+  <p><strong>태그:</strong> <%= @passage.tags_json || "없음" %></p>
+  <p><strong>본문:</strong></p>
+  <div style="background: #f9f9f9; padding: 15px; border-radius: 4px; white-space: pre-wrap;"><%= @passage.text %></div>
+</div>
+
+<div class="card">
+  <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px;">
+    <h3>문항 (<%= @items.count %>)</h3>
+    <%= link_to "문항 추가", new_admin_passage_item_path(@passage), class: "btn btn-primary btn-sm" %>
+  </div>
+
+  <table>
+    <thead>
+      <tr>
+        <th>ID</th>
+        <th>유형</th>
+        <th>영역</th>
+        <th>하위 영역</th>
+        <th>난이도</th>
+        <th>배점</th>
+        <th>작업</th>
+      </tr>
+    </thead>
+    <tbody>
+      <% @items.each do |item| %>
+        <tr>
+          <td><%= item.id %></td>
+          <td><span class="badge badge-info"><%= item.item_type %></span></td>
+          <td><%= item.domain %></td>
+          <td><%= item.subskill %></td>
+          <td><%= item.difficulty %></td>
+          <td><%= item.points %></td>
+          <td class="actions">
+            <%= link_to "보기", admin_passage_item_path(@passage, item), class: "btn btn-sm btn-secondary" %>
+            <%= link_to "수정", edit_admin_passage_item_path(@passage, item), class: "btn btn-sm btn-secondary" %>
+            <%= link_to "삭제", admin_passage_item_path(@passage, item), method: :delete, data: { confirm: "정말 삭제하시겠습니까?" }, class: "btn btn-sm btn-danger" %>
+          </td>
+        </tr>
+      <% end %>
+    </tbody>
+  </table>
+
+  <% if @items.empty? %>
+    <p style="padding: 20px; text-align: center; color: #666;">문항이 없습니다. 첫 문항을 추가하세요.</p>
+  <% end %>
+</div>

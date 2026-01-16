@@ -1,0 +1,29 @@
+<h2>환영합니다, <%= current_user.name %>님!</h2>
+
+<div class="card" style="margin-top: 20px;">
+  <h3>나의 자녀</h3>
+  <% if @children.any? %>
+    <table>
+      <thead>
+        <tr>
+          <th>이름</th>
+          <th>상태</th>
+        </tr>
+      </thead>
+      <tbody>
+        <% @children.each do |child| %>
+          <tr>
+            <td><%= child.name %></td>
+            <td>
+              <span class="badge badge-<%= child.status == 'active' ? 'success' : 'warning' %>">
+                <%= child.status == 'active' ? '활성' : '비활성' %>
+              </span>
+            </td>
+          </tr>
+        <% end %>
+      </tbody>
+    </table>
+  <% else %>
+    <p style="padding: 20px; color: #666;">연결된 자녀가 없습니다. 학교 담당자에게 문의해 주세요.</p>
+  <% end %>
+</div>

@@ -1,9 +1,9 @@
 <section class="report-section">
-  <h2>C-01 Session Overview</h2>
-  <p>
-    School: <%= @presenter.school&.name %><br>
-    Class: <%= @presenter.school_class&.name %> (Grade <%= @presenter.school_class&.grade %>)<br>
-    Version: <%= @presenter.assessment_version&.name %><br>
-    Session: <%= @presenter.session&.id %>
-  </p>
+  <h2>검사 개요</h2>
+  <table class="report-table">
+    <tr><th style="width:120px;">학교</th><td><%= @presenter.school&.name %></td></tr>
+    <tr><th>학급</th><td><%= @presenter.school_class&.name %> (<%= @presenter.school_class&.grade %>학년)</td></tr>
+    <tr><th>검사 버전</th><td><%= @presenter.assessment_version&.name %></td></tr>
+    <tr><th>검사 회차</th><td><%= @presenter.session&.id %></td></tr>
+  </table>
 </section>

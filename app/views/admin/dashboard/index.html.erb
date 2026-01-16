@@ -1,0 +1,36 @@
+<div class="admin-header">
+  <h2>대시보드</h2>
+</div>
+
+<div class="stats-grid">
+  <div class="stat-card">
+    <div class="label">사용자</div>
+    <div class="value"><%= @stats[:users] %></div>
+  </div>
+  <div class="stat-card">
+    <div class="label">지문</div>
+    <div class="value"><%= @stats[:passages] %></div>
+  </div>
+  <div class="stat-card">
+    <div class="label">문항</div>
+    <div class="value"><%= @stats[:items] %></div>
+  </div>
+  <div class="stat-card">
+    <div class="label">평가 버전</div>
+    <div class="value"><%= @stats[:assessment_versions] %></div>
+  </div>
+  <div class="stat-card">
+    <div class="label">활성 도서</div>
+    <div class="value"><%= @stats[:books] %></div>
+  </div>
+</div>
+
+<div class="card">
+  <h3>빠른 작업</h3>
+  <div class="actions" style="gap: 15px;">
+    <%= link_to "새 지문", new_admin_passage_path, class: "btn btn-primary" %>
+    <%= link_to "새 평가 버전", new_admin_assessment_version_path, class: "btn btn-primary" %>
+    <%= link_to "도서 추가", new_admin_book_catalog_path, class: "btn btn-primary" %>
+    <%= link_to "사용자 생성", new_admin_user_path, class: "btn btn-primary" %>
+  </div>
+</div>

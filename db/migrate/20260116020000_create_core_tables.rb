@@ -107,7 +107,6 @@ class CreateCoreTables < ActiveRecord::Migration[8.1]
       t.integer :time_spent
       t.timestamps
     end
-    add_index :responses, :submission_id
 
     create_table :scoring_results do |t|
       t.references :submission, null: false, foreign_key: true
@@ -117,7 +116,6 @@ class CreateCoreTables < ActiveRecord::Migration[8.1]
       t.json :rubric_breakdown_json
       t.timestamps
     end
-    add_index :scoring_results, :submission_id
 
     create_table :metrics_results do |t|
       t.references :submission, null: false, foreign_key: true

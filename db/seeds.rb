@@ -1,39 +1,27 @@
 # Development seed data for local testing.
-ActiveRecord::Base.transaction do
-  ReportAccess.delete_all
-  Report.delete_all
-  FeedbackAudit.delete_all
-  TeacherFeedback.delete_all
-  AiFeedbackCompiled.delete_all
-  AiFeedbackRun.delete_all
-  BookGuidance.delete_all
-  BookCandidate.delete_all
-  BookCatalog.delete_all
-  TraitResult.delete_all
-  MetricsResult.delete_all
-  ScoringResult.delete_all
-  Response.delete_all
-  Submission.delete_all
-  Session.delete_all
-  AssessmentVersionItem.delete_all
-  AssessmentVersion.delete_all
-  Item.delete_all
-  Passage.delete_all
-  ParentLink.delete_all
-  StudentProfile.delete_all
-  SchoolClass.delete_all
-  School.delete_all
-  User.delete_all
-  AnalyticsDomainAgg.delete_all
-  AnalyticsSubskillAgg.delete_all
-  AnalyticsTraitAgg.delete_all
+# Disable foreign key checks for cleanup
+ActiveRecord::Base.connection.execute("PRAGMA foreign_keys = OFF")
+
+%w[
+  report_access reports feedback_audit teacher_feedback
+  ai_feedback_compiled ai_feedback_runs book_guidance book_candidates book_catalog
+  trait_results metrics_results scoring_results responses submissions sessions
+  assessment_version_items assessment_versions items passages
+  parent_links student_profiles classes schools users
+  analytics_domain_agg analytics_subskill_agg analytics_trait_agg
+].each do |table|
+  ActiveRecord::Base.connection.execute("DELETE FROM #{table}")
+rescue StandardError
+  # Ignore if table doesn't exist
 end
 
-admin = User.create!(role: "admin", status: "active", name: "Admin User", email_optional: "admin@example.com")
-school_manager = User.create!(role: "school_manager", status: "active", name: "School Manager")
-teacher = User.create!(role: "teacher", status: "active", name: "Teacher Kim", email_optional: "teacher@example.com")
-student = User.create!(role: "student", status: "active", name: "Student Park")
-parent = User.create!(role: "parent", status: "active", name: "Parent Park")
+ActiveRecord::Base.connection.execute("PRAGMA foreign_keys = ON")
+
+admin = User.create!(role: "admin", status: "active", name: "Admin User", email_optional: "admin@example.com", password: "password123")
+school_manager = User.create!(role: "school_manager", status: "active", name: "School Manager", email_optional: "manager@example.com", password: "password123")
+teacher = User.create!(role: "teacher", status: "active", name: "Teacher Kim", email_optional: "teacher@example.com", password: "password123")
+student = User.create!(role: "student", status: "active", name: "Student Park", email_optional: "student@example.com", password: "password123")
+parent = User.create!(role: "parent", status: "active", name: "Parent Park", email_optional: "parent@example.com", password: "password123")
 
 school = School.create!(name: "Hanbit Elementary")
 school_class = SchoolClass.create!(school: school, grade: "3", name: "3-1")

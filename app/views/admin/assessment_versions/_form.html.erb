@@ -1,0 +1,33 @@
+<%= form_with model: [:admin, @assessment_version], local: true do |f| %>
+  <% if @assessment_version.errors.any? %>
+    <div class="alert alert-error">
+      <ul>
+        <% @assessment_version.errors.full_messages.each do |msg| %>
+          <li><%= msg %></li>
+        <% end %>
+      </ul>
+    </div>
+  <% end %>
+
+  <div class="form-group">
+    <%= f.label :name, "이름" %>
+    <%= f.text_field :name, required: true, placeholder: "예: 2026년 봄 평가 v1" %>
+  </div>
+
+  <div class="form-group">
+    <label>문항 선택</label>
+    <p style="font-size: 0.9rem; color: #666; margin-bottom: 10px;">
+      Ctrl/Cmd를 눌러 여러 문항을 선택하세요. 선택 순서가 평가 순서가 됩니다.
+    </p>
+    <%= select_tag :item_ids,
+        options_from_collection_for_select(@available_items, :id, ->(i) { "##{i.id} - #{i.passage&.title&.truncate(20) || '지문 없음'} - #{i.item_type} (#{i.domain})" }, @assessment_version.items.pluck(:id)),
+        multiple: true,
+        size: 15,
+        style: "width: 100%;" %>
+  </div>
+
+  <div class="actions">
+    <%= f.submit class: "btn btn-primary" %>
+    <%= link_to "취소", admin_assessment_versions_path, class: "btn btn-secondary" %>
+  </div>
+<% end %>

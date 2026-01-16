@@ -1,10 +1,10 @@
 <section class="report-section">
-  <h2>S-02 Assessment Overview</h2>
-  <p>
-    Version: <%= @presenter.assessment_version&.name %><br>
-    Items: <%= @presenter.assessment_items.count %><br>
-    Domains: <%= @presenter.assessment_domains.join(", ") %><br>
-    Subskills: <%= @presenter.assessment_subskills.join(", ") %>
-  </p>
+  <h2>검사 개요</h2>
+  <table class="report-table">
+    <tr><th style="width:120px;">검사 버전</th><td><%= @presenter.assessment_version&.name %></td></tr>
+    <tr><th>문항 수</th><td><%= @presenter.assessment_items.count %>문항</td></tr>
+    <tr><th>평가 영역</th><td><%= @presenter.assessment_domains.join(", ") %></td></tr>
+    <tr><th>하위 영역</th><td><%= @presenter.assessment_subskills.join(", ") %></td></tr>
+  </table>
   <p><%= @presenter.assessment_overview_text %></p>
 </section>
